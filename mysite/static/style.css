@@ -1,0 +1,103 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --background: #F5EFE4;
+  --text: #29251F;
+  --accent: #A87955;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+.site-navbar {
+  background: var(--background);
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(41, 37, 31, 0.12);
+}
+
+.navbar-brand {
+  color: var(--text);
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+.navbar-brand span,
+.about-section h1 span {
+  color: var(--accent);
+}
+
+.navbar-brand:hover {
+  color: var(--text);
+}
+
+.nav-link {
+  color: var(--text);
+  font-weight: 600;
+  text-align: center;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: var(--accent);
+}
+
+.dropdown-menu {
+  background: #FFFCF7;
+  border: 1px solid rgba(41, 37, 31, 0.1);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.dropdown-item {
+  color: var(--text);
+  border-radius: 6px;
+  padding: 9px 12px;
+}
+
+.dropdown-item:hover {
+  background: var(--background);
+  color: var(--accent);
+}
+
+.about-section {
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
+  padding: 90px 0;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 18px;
+}
+
+.about-section h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  font-weight: 750;
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+}
+
+.about-text {
+  max-width: 620px;
+  color: #746C60;
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+@media (max-width: 991px) {
+  .navbar-nav {
+    padding-top: 12px;
+    align-items: flex-start !important;
+  }
+}
