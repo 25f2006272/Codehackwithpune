@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+
+
+{% block navbar %}
+    <nav class="navbar aisha-navbar">
+        <div class="container">
+            <a href="/" class="back-link">HOME</a>
+        </div>
+    </nav>
+{% endblock %}
+{% block content %}
+
+
+    <section class="auth-section">
+        <div class="auth-card">
+            <p class="eyebrow">WELCOME BACK</p>
+            <h1>Login</h1>
+            <p class="subtitle">Welcome back! Please enter your details.</p>
+
+            <form action="/login" method="POST">
+
+                <div class="mb-3">
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="form-control"
+                           placeholder="Enter your email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control"
+                           placeholder="Enter your password" required>
+                </div>
+
+                <div class="text-end mb-4">
+                    <a href="#" class="form-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="auth-button">Login</button>
+
+            </form>
+
+            <p class="switch-text">
+                Don't have an account?
+                <a href="/signup">Sign up</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}
+
