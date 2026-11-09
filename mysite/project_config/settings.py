@@ -39,10 +39,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Project Applications
-    'config.apps.ConfigConfig',
-    'core.apps.CoreConfig',
-    'dashboard.apps.DashboardConfig',
+    # Existing Applications
+    'config',
+    'core',
+    'dashboard',
+
+    # New Applications
+    'accounts',
+    'workspaces',
+    'projects',
+    'filemanager',
+    'ai_engine',
+    'handover',
+    'audit',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +70,7 @@ ROOT_URLCONF = 'project_config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'template'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,3 +145,14 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+
+# Media Files (User Uploads)
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
