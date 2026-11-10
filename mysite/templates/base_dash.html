@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}DataM{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src=""app.js></script>
+</head>
+
+<body>
+
+<div class="app-shell" id="dashboard">
+
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+            DataM<span>  </span>
+        </div>
+
+        <div class="sidebar-menu">
+
+            <p class="menu-heading">PERSONAL</p>
+
+            <a href="{{ url_for('dashboard') }}" class="menu-link">
+                <i class="bi bi-grid"></i>
+                Dashboard
+            </a>
+            
+
+            <a href="{{ url_for('overview') }}" class="menu-link active">
+                <i class="bi bi-grid"></i>
+                Overview
+            </a>
+
+            <a href="{{ url_for('activity') }}" class="menu-link">
+                <i class="bi bi-clock-history"></i>
+                My Activity
+            </a>
+
+
+            <p class="menu-heading">WORK</p>
+
+            <a href="{{ url_for('projects') }}" class="menu-link">
+                <i class="bi bi-folder"></i>
+                My Projects
+            </a>
+
+            <a href="{{ url_for('tasks') }}" class="menu-link">
+                <i class="bi bi-check2-square"></i>
+                My Tasks
+            </a>
+
+            <a href="{{ url_for('handovers') }}" class="menu-link">
+                <i class="bi bi-arrow-left-right"></i>
+                My Handovers
+            </a>
+
+
+            <p class="menu-heading">KNOWLEDGE</p>
+
+            <a href="{{ url_for('library') }}" class="menu-link">
+                <i class="bi bi-journal-bookmark"></i>
+                Library
+            </a>
+
+            <a href="{{ url_for('review_queue') }}" class="menu-link">
+                <i class="bi bi-clipboard-check"></i>
+                Review Queue
+            </a>
+
+            <a href="{{ url_for('ai_insights') }}" class="menu-link">
+                <i class="bi bi-stars"></i>
+                AI Insights
+            </a>
+
+
+            <p class="menu-heading">WORKSPACES</p>
+
+            <a href="{{ url_for('codehack_team') }}" class="menu-link">
+                <span class="workspace-dot"></span>
+                CodeHack Team
+            </a>
+
+            <a href="{{ url_for('ecometrics') }}" class="menu-link">
+                <span class="workspace-dot dot-two"></span>
+                Ecometrics
+            </a>
+
+            <a href="{{ url_for('research_group') }}" class="menu-link">
+                <span class="workspace-dot dot-three"></span>
+                Research Group
+            </a>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('setting') }}" class="menu-link">
+                <i class="bi bi-gear"></i>
+                Settings
+            </a>
+
+            <a href="{{ url_for('help') }}" class="menu-link">
+                <i class="bi bi-question-circle"></i>
+                Help & Support
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+       <!-- MAIN CONTENT -->
+    <main class="main-area">
+
+        <button class="sidebar-toggle" id="menuToggle"
+                type="button" aria-label="Toggle sidebar">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+{% block scripts %}
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}
+
+</body>
+</html>

@@ -1,53 +1,146 @@
+
 {% extends 'base.html' %}
 
 {% block title %}
-Login
+Login - DataM
 {% endblock %}
 
 
 {% block navbar %}
-    <nav class="navbar aisha-navbar">
-        <div class="container">
-            <a href="/" class="back-link">HOME</a>
-        </div>
-    </nav>
+
+<nav class="navbar aisha-navbar">
+    <div class="container">
+        <a href="/" class="back-link">HOME</a>
+    </div>
+</nav>
+
 {% endblock %}
+
+
 {% block content %}
 
+<section class="auth-section">
 
-    <section class="auth-section">
-        <div class="auth-card">
-            <p class="eyebrow">WELCOME BACK</p>
-            <h1>Login</h1>
-            <p class="subtitle">Welcome back! Please enter your details.</p>
+    <div class="auth-card">
 
-            <form action="/login" method="POST">
+        <!-- Heading -->
+        <p class="eyebrow">WELCOME BACK</p>
 
-                <div class="mb-3">
-                    <label>Email Address</label>
-                    <input type="email" name="email" class="form-control"
-                           placeholder="Enter your email" required>
-                </div>
+        <h1>Login</h1>
 
-                <div class="mb-3">
-                    <label>Password</label>
-                    <input type="password" name="password" class="form-control"
-                           placeholder="Enter your password" required>
-                </div>
+        <p class="subtitle">
+            Welcome back! Please enter your details.
+        </p>
 
-                <div class="text-end mb-4">
-                    <a href="#" class="form-link">Forgot password?</a>
-                </div>
 
-                <button type="submit" class="auth-button">Login</button>
+        <!-- Email and Password Login -->
+        <form action="{{ url_for('login') }}" method="POST">
 
-            </form>
+            <div class="mb-3">
 
-            <p class="switch-text">
-                Don't have an account?
-                <a href="/signup">Sign up</a>
-            </p>
+                <label for="email">Email Address</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Forgot Password -->
+            <div class="text-end mb-4">
+
+                <a href="#" class="form-link">
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <!-- Login Button -->
+            <button type="submit" class="auth-button">
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- OR Divider -->
+        <div class="auth-divider">
+
+            <span>OR</span>
+
         </div>
-    </section>
-{% endblock %}
 
+
+        <!-- Social Login -->
+        <div class="oauth-buttons">
+
+
+            <!-- Google Login -->
+            <a
+                href="{{ url_for('login') }}"
+                class="oauth-button"
+            >
+
+                <i class="bi bi-google google-icon"></i>
+
+                <span>Continue with Google</span>
+
+            </a>
+
+
+            <!-- GitHub Login -->
+            <a
+                href="{{ url_for('login') }}"
+                class="oauth-button"
+            >
+
+                <i class="bi bi-github github-icon"></i>
+
+                <span>Continue with GitHub</span>
+
+            </a>
+
+
+        </div>
+
+
+        <!-- Signup Link -->
+        <p class="switch-text">
+
+            Don't have an account?
+
+            <a href="/s">Sign up</a>
+
+        </p>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

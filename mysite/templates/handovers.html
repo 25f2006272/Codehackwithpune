@@ -1,0 +1,68 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">WORK / TRANSFER OF WORK</p><h1>My Handovers</h1><p class="page-subtitle">Send work to teammates, receive deliverables and keep ownership clear.</p></div><div class="heading-actions"><button class="btn-primary-soft" data-demo-action="New handover form is a demo action."><i class="bi bi-send"></i>Start handover</button></div></section>
+<section class="stats-grid"><article class="stat-card"><div class="stat-label">All handovers <i class="bi bi-arrow-left-right"></i></div><div class="stat-value">03</div><div class="stat-note">Across your workspaces</div></article><article class="stat-card"><div class="stat-label">Received <i class="bi bi-inbox"></i></div><div class="stat-value">02</div><div class="stat-note">From teammates</div></article><article class="stat-card"><div class="stat-label">Awaiting review <i class="bi bi-hourglass-split"></i></div><div class="stat-value">02</div><div class="stat-note">Needs your action</div></article><article class="stat-card"><div class="stat-label">Approved <i class="bi bi-check-circle"></i></div><div class="stat-value">01</div><div class="stat-note positive">Completed handover</div></article></section>
+<section class="panel"><div class="tab-list" data-tabs><button class="tab-button active" data-tab-target="#received" type="button">Received from others</button><button class="tab-button" data-tab-target="#sent" type="button">Sent by me</button></div>
+<div id="received" data-tab-panel><div class="panel-heading"><div><p class="eyebrow">INCOMING</p><h2>Items shared with you</h2></div></div>
+<div class="data-row"><span class="row-icon"><i class="bi bi-folder2-open"></i></span><span class="row-copy"><strong>Project files</strong><small>From Rahul · CodeHack Team · Nov 10</small></span><span class="status pending">Pending</span><button class="btn-secondary-soft" data-demo-action="Project files opened in demo mode.">View</button></div>
+<div class="data-row"><span class="row-icon"><i class="bi bi-palette"></i></span><span class="row-copy"><strong>Design review</strong><small>From Priya · Ecometrics · Nov 09</small></span><span class="status review">Under review</span><button class="btn-secondary-soft" data-demo-action="Design review opened in demo mode.">View</button></div>
+</div>
+<div id="sent" data-tab-panel hidden><div class="panel-heading"><div><p class="eyebrow">OUTGOING</p><h2>Work you shared</h2></div></div>
+<div class="data-row"><span class="row-icon"><i class="bi bi-file-earmark-pdf"></i></span><span class="row-copy"><strong>Final report</strong><small>Sent to Aman · Research Group · Nov 07</small></span><span class="status approved">Approved</span></div>
+<div class="data-row"><span class="row-icon"><i class="bi bi-file-earmark-text"></i></span><span class="row-copy"><strong>API documentation</strong><small>Sent to Rahul · CodeHack Team · Nov 06</small></span><span class="status in-progress">Viewed</span></div>
+</div></section>
+<section class="two-col section-gap"><article class="content-card"><div class="card-icon"><i class="bi bi-check2-circle"></i></div><h3>What makes a complete handover?</h3><p>Include the latest files, context, open questions, next steps and a clear owner. Add a due date so the recipient knows when action is expected.</p></article><article class="content-card"><div class="card-icon"><i class="bi bi-shield-check"></i></div><h3>Keep ownership visible</h3><p>Use the status to show whether a handover is pending, under review, approved or needs changes.</p></article></section>
+{% endblock %}
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

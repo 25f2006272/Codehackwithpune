@@ -1,0 +1,72 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">WORK / PERSONAL QUEUE</p><h1>My Tasks</h1><p class="page-subtitle">A clear list of what needs your attention, what is underway and what is done.</p></div><div class="heading-actions"><button class="btn-primary-soft" data-demo-action="New task form is a demo action."><i class="bi bi-plus-lg"></i>Add task</button></div></section>
+<section class="stats-grid">
+ <article class="stat-card"><div class="stat-label">All tasks <i class="bi bi-list-check"></i></div><div class="stat-value">12</div><div class="stat-note">Assigned to you</div></article>
+ <article class="stat-card"><div class="stat-label">To do <i class="bi bi-circle"></i></div><div class="stat-value">04</div><div class="stat-note">Not started yet</div></article>
+ <article class="stat-card"><div class="stat-label">In progress <i class="bi bi-arrow-repeat"></i></div><div class="stat-value">03</div><div class="stat-note">Currently being worked on</div></article>
+ <article class="stat-card"><div class="stat-label">Completed <i class="bi bi-check-circle"></i></div><div class="stat-value">05</div><div class="stat-note positive">42% completion</div></article>
+</section>
+<div class="filter-bar" data-filter-group=".task-row"><button class="filter-chip active" data-filter="all">All</button><button class="filter-chip" data-filter="todo">To do</button><button class="filter-chip" data-filter="progress">In progress</button><button class="filter-chip" data-filter="done">Completed</button><label class="inline-search"><i class="bi bi-search"></i><input type="search" placeholder="Search tasks..." data-filter-input=".task-row"></label></div>
+<section class="panel"><div class="panel-heading"><div><p class="eyebrow">YOUR TASK LIST</p><h2>Assigned tasks</h2></div><span class="small-muted">Demo task data</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Task</th><th>Workspace</th><th>Due date</th><th>Priority</th><th>Status</th></tr></thead><tbody>
+<tr class="task-row" data-filter-value="todo"><td><div class="task-line"><input class="task-check" type="checkbox" aria-label="Mark task complete"><span class="row-copy"><strong class="task-title">Complete project documentation</strong><small>Prepare final project notes and setup guide</small></span></div></td><td>CodeHack Team</td><td>Nov 11, 2026</td><td><span class="status pending">High</span></td><td><span class="status pending">To do</span></td></tr>
+<tr class="task-row" data-filter-value="progress"><td><div class="task-line"><input class="task-check" type="checkbox" aria-label="Mark task complete"><span class="row-copy"><strong class="task-title">Review website design</strong><small>Check responsive layouts and spacing</small></span></div></td><td>Ecometrics</td><td>Nov 13, 2026</td><td><span class="status review">Medium</span></td><td><span class="status in-progress">In progress</span></td></tr>
+<tr class="task-row" data-filter-value="todo"><td><div class="task-line"><input class="task-check" type="checkbox" aria-label="Mark task complete"><span class="row-copy"><strong class="task-title">Prepare research report</strong><small>Combine findings and citations</small></span></div></td><td>Research Group</td><td>Nov 15, 2026</td><td><span class="status pending">High</span></td><td><span class="status pending">To do</span></td></tr>
+<tr class="task-row" data-filter-value="progress"><td><div class="task-line"><input class="task-check" type="checkbox" aria-label="Mark task complete"><span class="row-copy"><strong class="task-title">Update project timeline</strong><small>Revise milestones after team review</small></span></div></td><td>CodeHack Team</td><td>Nov 16, 2026</td><td><span class="status neutral">Low</span></td><td><span class="status in-progress">In progress</span></td></tr>
+<tr class="task-row" data-filter-value="done"><td><div class="task-line"><input class="task-check" type="checkbox" checked aria-label="Completed task"><span class="row-copy"><strong class="task-title">Prepare sprint notes</strong><small>Notes shared with the team</small></span></div></td><td>CodeHack Team</td><td>Nov 08, 2026</td><td><span class="status neutral">Low</span></td><td><span class="status completed">Completed</span></td></tr>
+</tbody></table></div><p class="small-muted" style="margin:14px 0 0">Ticking a checkbox changes the task visually in this demo page. It does not save to a database.</p></section>
+{% endblock %}
+{% block scripts %}<script>document.querySelectorAll('.task-check').forEach((check)=>check.addEventListener('change',()=>{const line=check.closest('.task-line');if(line)line.classList.toggle('done',check.checked)}));</script>
+
+
+
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

@@ -1,9 +1,637 @@
-{% extends 'base.html' %}
 
-{% block title %}
-dashboard
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+
+<div class="dashboard" id="dashboard">
+
+
+
+    <!-- HAMBURGER BUTTON -->
+    <!-- Sidebar ke bahar hai, isliye sidebar hide hone par bhi visible rahega -->
+<!-- 
+    <button class="menu-toggle"
+            id="menuToggle"
+            type="button"
+            aria-label="Hide sidebar"
+            aria-controls="sidebar"
+            aria-expanded="true">
+
+        <span></span>
+        <span></span>
+        <span></span> -->
+
+    </button>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+
+        <!-- TOP NAVBAR -->
+        <header class="topbar">
+
+            <div class="workspace-dropdown">
+
+                <button class="workspace-btn" type="button">
+                    All Workspaces
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+
+            </div>
+
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       placeholder="Search anything..."
+                       aria-label="Search anything">
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <button class="icon-btn"
+                        type="button"
+                        title="Create">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                </button>
+
+
+                <button class="icon-btn notification-btn"
+                        type="button"
+                        title="Notifications">
+
+                    <i class="bi bi-bell"></i>
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+                        M
+                    </div>
+
+                    <div class="profile-info">
+
+                        <strong>Motu Singh(Motka)</strong>
+
+                        <small>Member</small>
+
+                    </div>
+
+                    <i class="bi bi-chevron-down"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- DASHBOARD BODY -->
+        <div class="dashboard-body">
+
+
+            <!-- WELCOME SECTION -->
+            <section class="welcome-section">
+
+                <div>
+
+                    <p class="eyebrow">
+                        YOUR WORKSPACE
+                    </p>
+
+                    <h1>
+                        Good evening, MOTKA
+                        <span>✦</span>
+                    </h1>
+
+                    <p class="welcome-text">
+                        Here's what's happening across your workspaces.
+                    </p>
+
+                </div>
+
+
+                <div class="welcome-actions">
+
+                    <button class="btn-create" type="button">
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Create Workspace
+
+                    </button>
+
+
+                    <button class="btn-join" type="button">
+
+                        <i class="bi bi-box-arrow-in-right"></i>
+
+                        Join Workspace
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- STATISTICS -->
+            <section class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span>Workspaces</span>
+
+                        <i class="bi bi-grid"></i>
+
+                    </div>
+
+                    <h2>04</h2>
+
+                    <small>Active workspaces</small>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span>Projects</span>
+
+                        <i class="bi bi-folder2-open"></i>
+
+                    </div>
+
+                    <h2>08</h2>
+
+                    <small>Across all workspaces</small>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span>My Tasks</span>
+
+                        <i class="bi bi-check2-square"></i>
+
+                    </div>
+
+                    <h2>12</h2>
+
+                    <small>Tasks assigned to you</small>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <span>Handovers</span>
+
+                        <i class="bi bi-arrow-left-right"></i>
+
+                    </div>
+
+                    <h2>03</h2>
+
+                    <small>Awaiting action</small>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- WORKSPACES AND ACTIVITY -->
+            <section class="content-grid">
+
+
+                <!-- MY WORKSPACES -->
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                YOUR TEAMS
+                            </p>
+
+                            <h3>My Workspaces</h3>
+
+                        </div>
+
+                        <a href="#">
+                            View all
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="workspace-list">
+
+
+                        <div class="workspace-item">
+
+                            <div class="workspace-icon icon-one">
+                                C
+                            </div>
+
+                            <div class="workspace-details">
+
+                                <strong>CodeHack Team</strong>
+
+                                <small>12 Members · 4 Projects</small>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </div>
+
+
+
+                        <div class="workspace-item">
+
+                            <div class="workspace-icon icon-two">
+                                E
+                            </div>
+
+                            <div class="workspace-details">
+
+                                <strong>Ecometrics</strong>
+
+                                <small>08 Members · 2 Projects</small>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </div>
+
+
+
+                        <div class="workspace-item">
+
+                            <div class="workspace-icon icon-three">
+                                R
+                            </div>
+
+                            <div class="workspace-details">
+
+                                <strong>Research Group</strong>
+
+                                <small>06 Members · 2 Projects</small>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RECENT ACTIVITY -->
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                WHAT'S NEW
+                            </p>
+
+                            <h3>Recent Activity</h3>
+
+                        </div>
+
+                        <a href="#">See all</a>
+
+                    </div>
+
+
+                    <div class="activity-list">
+
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+
+                                <i class="bi bi-file-earmark-arrow-up"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>File uploaded</strong>
+
+                                <small>CodeHack Team · 10 min ago</small>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+
+                                <i class="bi bi-pencil-square"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>Task updated</strong>
+
+                                <small>Ecometrics · 1 hour ago</small>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+
+                                <i class="bi bi-arrow-left-right"></i>
+
+                            </div>
+
+                            <div>
+
+                                <strong>New handover</strong>
+
+                                <small>Research Group · 3 hours ago</small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- TASKS AND HANDOVERS -->
+            <section class="content-grid bottom-grid">
+
+
+                <!-- MY TASKS -->
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                STAY ON TRACK
+                            </p>
+
+                            <h3>My Tasks</h3>
+
+                        </div>
+
+                        <a href="#">
+                            View all
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="task-item">
+
+                        <div>
+
+                            <strong>
+                                Complete project documentation
+                            </strong>
+
+                            <small>CodeHack Team</small>
+
+                        </div>
+
+                        <span class="status pending">
+                            Pending
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="task-item">
+
+                        <div>
+
+                            <strong>
+                                Review website design
+                            </strong>
+
+                            <small>Ecometrics</small>
+
+                        </div>
+
+                        <span class="status progress">
+                            In Progress
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="task-item">
+
+                        <div>
+
+                            <strong>
+                                Prepare research report
+                            </strong>
+
+                            <small>Research Group</small>
+
+                        </div>
+
+                        <span class="status completed">
+                            Completed
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- HANDOVER STATUS -->
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <p class="eyebrow">
+                                HANDOVER UPDATES
+                            </p>
+
+                            <h3>Handover Status</h3>
+
+                        </div>
+
+                        <a href="#">See all</a>
+
+                    </div>
+
+
+                    <div class="handover-item">
+
+                        <div>
+
+                            <strong>Project files</strong>
+
+                            <small>From Rahul</small>
+
+                        </div>
+
+                        <span class="status pending">
+                            Pending
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="handover-item">
+
+                        <div>
+
+                            <strong>Design review</strong>
+
+                            <small>From Priya</small>
+
+                        </div>
+
+                        <span class="status progress">
+                            Under Review
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="handover-item">
+
+                        <div>
+
+                            <strong>Final report</strong>
+
+                            <small>From Aman</small>
+
+                        </div>
+
+                        <span class="status completed">
+                            Approved
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
 {% endblock %}
 
-{% block navbar %}
+
+
+<!-- JAVASCRIPT -->
+{% block scripts %}
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
 
 {% endblock %}

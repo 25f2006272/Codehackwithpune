@@ -1,0 +1,65 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<section class="workspace-hero"><div><p class="eyebrow">WORKSPACE / RESEARCH</p><h1>Research Group</h1><p>Research notes, papers, references and peer review.</p><div class="member-stack" style="margin-top:14px"><span class="avatar">M</span><span class="avatar avatar-five">A</span><span class="avatar avatar-three">P</span><span class="avatar avatar-four">S</span><span class="small-muted" style="margin-left:8px">6 members</span></div></div><div class="workspace-logo" style="background:#e8dff0;color:#79658c">R</div></section>
+<section class="stats-grid"><article class="stat-card"><div class="stat-label">Members <i class="bi bi-people"></i></div><div class="stat-value">06</div><div class="stat-note">2 active today</div></article><article class="stat-card"><div class="stat-label">Projects <i class="bi bi-folder2"></i></div><div class="stat-value">02</div><div class="stat-note">1 in review</div></article><article class="stat-card"><div class="stat-label">Open tasks <i class="bi bi-check2-square"></i></div><div class="stat-value">02</div><div class="stat-note">1 due this week</div></article><article class="stat-card"><div class="stat-label">References <i class="bi bi-journal-bookmark"></i></div><div class="stat-value">12</div><div class="stat-note">Shared collection</div></article></section>
+<section class="panel"><div class="tab-list" data-tabs><button class="tab-button active" data-tab-target="#rg-projects">Projects</button><button class="tab-button" data-tab-target="#rg-members">Members</button><button class="tab-button" data-tab-target="#rg-files">Research library</button><button class="tab-button" data-tab-target="#rg-about">About</button></div>
+<div id="rg-projects" data-tab-panel><div class="data-row"><span class="row-icon"><i class="bi bi-journal-text"></i></span><span class="row-copy"><strong>Research Paper</strong><small>Updated Nov 09 · 86% complete</small></span><span class="status review">In review</span></div><div class="data-row"><span class="row-icon"><i class="bi bi-search"></i></span><span class="row-copy"><strong>Literature Review</strong><small>Updated Nov 07 · 57% complete</small></span><span class="status in-progress">In progress</span></div></div>
+<div id="rg-members" data-tab-panel hidden><div class="data-row"><span class="avatar">M</span><span class="row-copy"><strong>Motu Singh</strong><small>Member · You</small></span><span class="status neutral">Member</span></div><div class="data-row"><span class="avatar avatar-five">A</span><span class="row-copy"><strong>Aman Verma</strong><small>Research lead</small></span><span class="status in-progress">Admin</span></div><div class="data-row"><span class="avatar avatar-three">P</span><span class="row-copy"><strong>Priya Sharma</strong><small>Reviewer</small></span><span class="status neutral">Member</span></div></div>
+<div id="rg-files" data-tab-panel hidden><div class="data-row"><span class="row-icon"><i class="bi bi-journal-bookmark"></i></span><span class="row-copy"><strong>Research References</strong><small>12 saved links and papers</small></span><span class="status neutral">Collection</span></div><div class="data-row"><span class="row-icon"><i class="bi bi-file-earmark-pdf"></i></span><span class="row-copy"><strong>Methodology Notes.pdf</strong><small>1.1 MB · Updated Nov 08</small></span><span class="status neutral">PDF</span></div></div>
+<div id="rg-about" data-tab-panel hidden><p class="page-subtitle">This workspace is for collaborative research, literature reviews, writing and peer feedback.</p><div class="field-grid"><div><p class="small-muted">Created</p><strong>October 2026</strong></div><div><p class="small-muted">Visibility</p><strong>Members only</strong></div></div></div></section>
+{% endblock %}
+
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

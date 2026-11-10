@@ -1,0 +1,67 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">KNOWLEDGE / APPROVALS</p><h1>Review Queue</h1><p class="page-subtitle">Review documents and deliverables that teammates have sent for your feedback.</p></div><div class="heading-actions"><button class="btn-secondary-soft" data-demo-action="Review history opened in demo mode."><i class="bi bi-clock-history"></i>Review history</button></div></section>
+<section class="stats-grid"><article class="stat-card"><div class="stat-label">Waiting for you <i class="bi bi-hourglass-split"></i></div><div class="stat-value">05</div><div class="stat-note">Items not yet reviewed</div></article><article class="stat-card"><div class="stat-label">Reviewed this week <i class="bi bi-check2-all"></i></div><div class="stat-value">09</div><div class="stat-note positive">3 approved</div></article><article class="stat-card"><div class="stat-label">Needs changes <i class="bi bi-pencil-square"></i></div><div class="stat-value">02</div><div class="stat-note">Waiting for resubmission</div></article><article class="stat-card"><div class="stat-label">Average review time <i class="bi bi-stopwatch"></i></div><div class="stat-value">1.4d</div><div class="stat-note">Across recent reviews</div></article></section>
+<div class="filter-bar" data-filter-group=".review-card"><button class="filter-chip active" data-filter="all">All items</button><button class="filter-chip" data-filter="pending">Needs review</button><button class="filter-chip" data-filter="review">In review</button><button class="filter-chip" data-filter="changes">Changes requested</button></div>
+<section class="two-col">
+ <article class="content-card review-card" data-filter-value="pending" data-review-row><div class="panel-heading"><span class="status pending" data-review-status>Needs review</span><span class="small-muted">Due today</span></div><h3>Website wireframe</h3><p>Updated homepage and mobile navigation layout. Please check spacing, labels and responsive behavior.</p><div class="resource-meta"><span><i class="bi bi-person"></i> Priya Sharma</span><span>·</span><span>Ecometrics</span><span>·</span><span>Submitted Nov 10</span></div><div class="heading-actions" style="margin-top:17px"><button class="btn-primary-soft" data-review-action="approve"><i class="bi bi-check-lg"></i>Approve</button><button class="btn-secondary-soft" data-review-action="changes"><i class="bi bi-chat-left-text"></i>Request changes</button><button class="btn-link-soft" data-demo-action="Preview opened in demo mode.">Preview</button></div></article>
+ <article class="content-card review-card" data-filter-value="pending" data-review-row><div class="panel-heading"><span class="status pending" data-review-status>Needs review</span><span class="small-muted">Due Nov 12</span></div><h3>Research summary</h3><p>Summary of findings, methodology and key references for the current paper.</p><div class="resource-meta"><span><i class="bi bi-person"></i> Aman Verma</span><span>·</span><span>Research Group</span><span>·</span><span>Submitted Nov 09</span></div><div class="heading-actions" style="margin-top:17px"><button class="btn-primary-soft" data-review-action="approve"><i class="bi bi-check-lg"></i>Approve</button><button class="btn-secondary-soft" data-review-action="changes"><i class="bi bi-chat-left-text"></i>Request changes</button><button class="btn-link-soft" data-demo-action="Preview opened in demo mode.">Preview</button></div></article>
+ <article class="content-card review-card" data-filter-value="review" data-review-row><div class="panel-heading"><span class="status in-progress" data-review-status>In review</span><span class="small-muted">Due Nov 13</span></div><h3>Project documentation</h3><p>Technical handover, setup instructions and the latest project decisions.</p><div class="resource-meta"><span><i class="bi bi-person"></i> Rahul Kumar</span><span>·</span><span>CodeHack Team</span><span>·</span><span>Submitted Nov 08</span></div><div class="heading-actions" style="margin-top:17px"><button class="btn-secondary-soft" data-demo-action="This item is already being reviewed.">View details</button></div></article>
+ <article class="content-card review-card" data-filter-value="changes" data-review-row><div class="panel-heading"><span class="status review" data-review-status>Changes requested</span><span class="small-muted">Updated Nov 09</span></div><h3>Customer dashboard mockup</h3><p>Waiting for the updated version after feedback on chart labels and contrast.</p><div class="resource-meta"><span><i class="bi bi-person"></i> Neha Singh</span><span>·</span><span>Ecometrics</span></div><div class="heading-actions" style="margin-top:17px"><button class="btn-secondary-soft" data-demo-action="Feedback details opened in demo mode.">View feedback</button></div></article>
+</section>
+<p class="small-muted section-gap">Approve and request-changes controls update only this demo view. Connect them to your database to save real review decisions.</p>
+{% endblock %}
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

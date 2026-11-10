@@ -1,0 +1,91 @@
+{% extends 'base_dash.html' %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<section class="welcome-section">
+  <div class="welcome-copy"><p class="eyebrow">TUESDAY, YOUR WORKSPACE</p><h1>Good morning, Motu <span style="color:var(--accent)">✦</span></h1><p class="welcome-text">Here’s what’s happening across your workspaces today.</p></div>
+  <div class="welcome-actions"><button class="btn-primary-soft" data-demo-action="Create Workspace form is a demo action."><i class="bi bi-plus-lg"></i>Create workspace</button><button class="btn-secondary-soft" data-demo-action="Workspace invitation form is a demo action."><i class="bi bi-box-arrow-in-right"></i>Join workspace</button></div>
+</section>
+<section class="stats-grid">
+  <article class="stat-card"><div class="stat-label">Workspaces <i class="bi bi-grid"></i></div><div class="stat-value">04</div><div class="stat-note">3 active · 1 invited</div></article>
+  <article class="stat-card"><div class="stat-label">Projects <i class="bi bi-folder2-open"></i></div><div class="stat-value">08</div><div class="stat-note positive">2 updated this week</div></article>
+  <article class="stat-card"><div class="stat-label">My open tasks <i class="bi bi-check2-square"></i></div><div class="stat-value">07</div><div class="stat-note">2 due this week</div></article>
+  <article class="stat-card"><div class="stat-label">Pending reviews <i class="bi bi-clipboard-check"></i></div><div class="stat-value">05</div><div class="stat-note">1 needs attention</div></article>
+</section>
+<section class="content-grid">
+  <article class="panel"><div class="panel-heading"><div><p class="eyebrow">YOUR TEAMS</p><h2>My Workspaces</h2></div><a href="{{ url_for('codehack_team') }}">View workspaces <i class="bi bi-arrow-right"></i></a></div>
+    <a class="data-row" href="{{ url_for('codehack_team') }}"><span class="workspace-logo avatar">C</span><span class="row-copy"><strong>CodeHack Team</strong><small>12 members · 4 projects</small></span><span class="status in-progress">Active</span></a>
+    <a class="data-row" href="{{ url_for('ecometrics') }}"><span class="workspace-logo avatar avatar-two">E</span><span class="row-copy"><strong>Ecometrics</strong><small>8 members · 2 projects</small></span><span class="status in-progress">Active</span></a>
+    <a class="data-row" href="{{ url_for('research_group') }}"><span class="workspace-logo avatar avatar-three">R</span><span class="row-copy"><strong>Research Group</strong><small>6 members · 2 projects</small></span><span class="status in-progress">Active</span></a>
+  </article>
+  <article class="panel"><div class="panel-heading"><div><p class="eyebrow">WHAT’S NEW</p><h2>Recent activity</h2></div><a href="{{ url_for('activity') }}">See all</a></div>
+    <div class="data-row"><span class="row-icon"><i class="bi bi-file-earmark-arrow-up"></i></span><span class="row-copy"><strong>Project proposal uploaded</strong><small>CodeHack Team · 10 minutes ago</small></span></div>
+    <div class="data-row"><span class="row-icon"><i class="bi bi-pencil-square"></i></span><span class="row-copy"><strong>Website design updated</strong><small>Ecometrics · 1 hour ago</small></span></div>
+    <div class="data-row"><span class="row-icon"><i class="bi bi-chat-left-text"></i></span><span class="row-copy"><strong>New comment on research notes</strong><small>Research Group · Yesterday</small></span></div>
+  </article>
+</section>
+<section class="content-grid">
+  <article class="panel"><div class="panel-heading"><div><p class="eyebrow">STAY ON TRACK</p><h2>Tasks to focus on</h2></div><a href="{{ url_for('tasks') }}">All tasks</a></div>
+    <div class="data-row"><span class="row-icon"><i class="bi bi-file-text"></i></span><span class="row-copy"><strong>Complete project documentation</strong><small>CodeHack Team · Due tomorrow</small></span><span class="status pending">Pending</span></div>
+    <div class="data-row"><span class="row-icon"><i class="bi bi-palette"></i></span><span class="row-copy"><strong>Review website design</strong><small>Ecometrics · Due Nov 13</small></span><span class="status in-progress">In progress</span></div>
+    <div class="data-row"><span class="row-icon"><i class="bi bi-journal-text"></i></span><span class="row-copy"><strong>Prepare research report</strong><small>Research Group · Due Nov 15</small></span><span class="status review">Review</span></div>
+  </article>
+  <article class="panel"><div class="panel-heading"><div><p class="eyebrow">PROJECT HEALTH</p><h2>Project progress</h2></div><a href="{{ url_for('projects') }}">All projects</a></div>
+    <div class="data-row"><span class="row-copy"><strong>Website Redesign</strong><small>CodeHack Team</small><div class="progress-track"><span style="width:72%"></span></div></span><strong class="small-muted">72%</strong></div>
+    <div class="data-row"><span class="row-copy"><strong>Customer Analytics</strong><small>Ecometrics</small><div class="progress-track"><span style="width:48%"></span></div></span><strong class="small-muted">48%</strong></div>
+    <div class="data-row"><span class="row-copy"><strong>Research Paper</strong><small>Research Group</small><div class="progress-track"><span style="width:86%"></span></div></span><strong class="small-muted">86%</strong></div>
+  </article>
+</section>
+{% endblock %}
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}
+
+
+

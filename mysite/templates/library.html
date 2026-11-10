@@ -1,0 +1,68 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">KNOWLEDGE / SHARED RESOURCES</p><h1>Library</h1><p class="page-subtitle">Find team documents, guides, templates and reference material in one place.</p></div><div class="heading-actions"><button class="btn-primary-soft" data-demo-action="Upload resource is a demo action."><i class="bi bi-cloud-arrow-up"></i>Upload resource</button></div></section>
+<section class="stats-grid"><article class="stat-card"><div class="stat-label">All resources <i class="bi bi-collection"></i></div><div class="stat-value">24</div><div class="stat-note">Across 3 workspaces</div></article><article class="stat-card"><div class="stat-label">Documents <i class="bi bi-file-earmark-text"></i></div><div class="stat-value">16</div><div class="stat-note">PDF, DOC and notes</div></article><article class="stat-card"><div class="stat-label">Folders <i class="bi bi-folder2"></i></div><div class="stat-value">05</div><div class="stat-note">Organized collections</div></article><article class="stat-card"><div class="stat-label">Shared with you <i class="bi bi-people"></i></div><div class="stat-value">08</div><div class="stat-note">From teammates</div></article></section>
+<div class="filter-bar" data-filter-group=".resource-card"><button class="filter-chip active" data-filter="all">All resources</button><button class="filter-chip" data-filter="document">Documents</button><button class="filter-chip" data-filter="folder">Folders</button><button class="filter-chip" data-filter="template">Templates</button><label class="inline-search"><i class="bi bi-search"></i><input type="search" placeholder="Search library..." data-filter-input=".resource-card"></label></div>
+<section class="three-col">
+ <article class="content-card resource-card" data-filter-value="document"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-pdf"></i></span><div><h3>Project Guidelines.pdf</h3><p>Project setup, process and delivery guidelines.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>2.4 MB</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Preview: Project Guidelines.pdf">Preview file</button></div></article>
+ <article class="content-card resource-card" data-filter-value="folder"><div class="resource-card"><span class="resource-type"><i class="bi bi-folder2-open"></i></span><div><h3>Brand Assets</h3><p>Logos, colors, illustrations and design exports.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>18 files</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Brand Assets folder opened in demo mode.">Open folder</button></div></article>
+ <article class="content-card resource-card" data-filter-value="template"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-richtext"></i></span><div><h3>Meeting Notes Template</h3><p>A reusable format for agendas and action items.</p><div class="resource-meta"><span>Shared library</span><span>·</span><span>Updated Nov 08</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Meeting Notes Template opened in demo mode.">Use template</button></div></article>
+ <article class="content-card resource-card" data-filter-value="document"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-word"></i></span><div><h3>Research References</h3><p>Useful papers and sources for the current research.</p><div class="resource-meta"><span>Research Group</span><span>·</span><span>12 links</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Research References opened in demo mode.">Open collection</button></div></article>
+ <article class="content-card resource-card" data-filter-value="document"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-spreadsheet"></i></span><div><h3>Customer Metrics.xlsx</h3><p>Monthly metrics and customer segment summary.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>860 KB</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Customer Metrics.xlsx opened in demo mode.">Preview file</button></div></article>
+ <article class="content-card resource-card" data-filter-value="folder"><div class="resource-card"><span class="resource-type"><i class="bi bi-folder"></i></span><div><h3>Product Screenshots</h3><p>Approved product images and screen captures.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>9 files</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Product Screenshots folder opened in demo mode.">Open folder</button></div></article>
+</section>
+{% endblock %}
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

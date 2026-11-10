@@ -1,88 +1,153 @@
-<<<<<<< HEAD
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-=======
->>>>>>> 66715c4adcc2b5cd17c22a51ad10670718d4a037
 
-{% block title %} Home {% endblock %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
 
-    <title>
-        {% block title %}Knowledge Handover Platform{% endblock %}
-    </title>
+    <!-- Page Title -->
+    <title>{% block title %}Home{% endblock %}</title>
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-=======
-    <title>DataM</title>
 
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
->>>>>>> 66715c4adcc2b5cd17c22a51ad10670718d4a037
-</head>
 
-{% block navbar %}
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src=""app.js></script>
+</head>
 
 
 <body>
 
-<<<<<<< HEAD
-    {% if messages %}
-        {% for message in messages %}
-            <div class="message {{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <!-- NAVBAR -->
+    {% block navbar %}
 
-</body>
-</html>
-=======
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg aisha-navbar">
+
         <div class="container">
 
-            <a class="navbar-brand" href="#home">DataM</a>
+            <a class="navbar-brand" href="#home">
+                DataM
+            </a>
 
-            <button class="navbar-toggler" type="button"
+
+            <button class="navbar-toggler"
+                    type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#mainNav">
+
                 <span class="navbar-toggler-icon"></span>
+
             </button>
-        </Div>
+
+
+            <div class="collapse navbar-collapse" id="mainNav">
+
+            </div>
+
+        </div>
+
     </nav>
 
+    {% endblock %}
 
 
 
+    <!-- MAIN CONTENT -->
+    {% block content %}
 
-{% endblock %}
-
-{% block content %} 
-
-{% endblock %}
+    {% endblock %}
 
 
- <!-- About Section -->
+
+    <!-- ABOUT SECTION -->
+    {% block about %}
+
     <section id="about" class="about-section">
+
         <div class="container">
+
             <p class="eyebrow">ABOUT US</p>
 
             <h2></h2>
 
             <p>
-                
+
             </p>
+
         </div>
+
     </section>
->>>>>>> 66715c4adcc2b5cd17c22a51ad10670718d4a037
+
+    {% endblock %}
+
+
+
+    <!-- BOOTSTRAP JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    <!-- CUSTOM JAVASCRIPT -->
+    {% block scripts %}
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+    {% endblock %}
+
+
+</body>
+
+</html>

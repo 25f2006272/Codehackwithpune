@@ -1,0 +1,64 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<section class="workspace-hero"><div><p class="eyebrow">WORKSPACE / ANALYTICS</p><h1>Ecometrics</h1><p>Analytics, customer insights and design collaboration.</p><div class="member-stack" style="margin-top:14px"><span class="avatar">M</span><span class="avatar avatar-four">A</span><span class="avatar avatar-five">N</span><span class="avatar avatar-three">P</span><span class="small-muted" style="margin-left:8px">8 members</span></div></div><div class="workspace-logo" style="background:#e1e8dc;color:#61785b">E</div></section>
+<section class="stats-grid"><article class="stat-card"><div class="stat-label">Members <i class="bi bi-people"></i></div><div class="stat-value">08</div><div class="stat-note">3 active today</div></article><article class="stat-card"><div class="stat-label">Projects <i class="bi bi-folder2"></i></div><div class="stat-value">02</div><div class="stat-note">Both active</div></article><article class="stat-card"><div class="stat-label">Open tasks <i class="bi bi-check2-square"></i></div><div class="stat-value">03</div><div class="stat-note">1 in review</div></article><article class="stat-card"><div class="stat-label">Shared files <i class="bi bi-files"></i></div><div class="stat-value">11</div><div class="stat-note">4 updated recently</div></article></section>
+<section class="panel"><div class="tab-list" data-tabs><button class="tab-button active" data-tab-target="#eco-projects">Projects</button><button class="tab-button" data-tab-target="#eco-members">Members</button><button class="tab-button" data-tab-target="#eco-files">Files</button><button class="tab-button" data-tab-target="#eco-about">About</button></div>
+<div id="eco-projects" data-tab-panel><div class="data-row"><span class="row-icon"><i class="bi bi-graph-up"></i></span><span class="row-copy"><strong>Customer Analytics</strong><small>Updated yesterday · 48% complete</small></span><span class="status in-progress">In progress</span></div><div class="data-row"><span class="row-icon"><i class="bi bi-palette"></i></span><span class="row-copy"><strong>Design System Refresh</strong><small>Updated Nov 08 · 65% complete</small></span><span class="status in-progress">In progress</span></div></div>
+<div id="eco-members" data-tab-panel hidden><div class="data-row"><span class="avatar">M</span><span class="row-copy"><strong>Motu Singh</strong><small>Member · You</small></span><span class="status neutral">Member</span></div><div class="data-row"><span class="avatar avatar-four">A</span><span class="row-copy"><strong>Aarav Mehta</strong><small>Analytics lead</small></span><span class="status in-progress">Admin</span></div><div class="data-row"><span class="avatar avatar-three">P</span><span class="row-copy"><strong>Priya Sharma</strong><small>Product designer</small></span><span class="status neutral">Member</span></div></div>
+<div id="eco-files" data-tab-panel hidden><div class="data-row"><span class="row-icon"><i class="bi bi-folder2"></i></span><span class="row-copy"><strong>Brand Assets</strong><small>18 files · Updated Nov 09</small></span><span class="status neutral">Folder</span></div><div class="data-row"><span class="row-icon"><i class="bi bi-file-earmark-excel"></i></span><span class="row-copy"><strong>Customer Metrics.xlsx</strong><small>860 KB · Updated Nov 08</small></span><span class="status neutral">XLSX</span></div></div>
+<div id="eco-about" data-tab-panel hidden><p class="page-subtitle">Ecometrics brings together customer analytics, product metrics, design work and shared reporting resources.</p><div class="field-grid"><div><p class="small-muted">Created</p><strong>September 2026</strong></div><div><p class="small-muted">Visibility</p><strong>Members only</strong></div></div></div></section>
+{% endblock %}
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

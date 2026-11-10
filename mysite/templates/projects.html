@@ -1,0 +1,73 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">WORK / PROJECT MANAGEMENT</p><h1>My Projects</h1><p class="page-subtitle">Plan work, see progress and keep every team project moving.</p></div><div class="heading-actions"><button class="btn-primary-soft" data-demo-action="New project form is a demo action."><i class="bi bi-plus-lg"></i>New project</button></div></section>
+<section class="stats-grid">
+ <article class="stat-card"><div class="stat-label">Total projects <i class="bi bi-folder2-open"></i></div><div class="stat-value">08</div><div class="stat-note">Across 3 workspaces</div></article>
+ <article class="stat-card"><div class="stat-label">In progress <i class="bi bi-activity"></i></div><div class="stat-value">05</div><div class="stat-note">2 updated this week</div></article>
+ <article class="stat-card"><div class="stat-label">In review <i class="bi bi-eye"></i></div><div class="stat-value">01</div><div class="stat-note">Waiting for feedback</div></article>
+ <article class="stat-card"><div class="stat-label">Completed <i class="bi bi-check-circle"></i></div><div class="stat-value">02</div><div class="stat-note positive">Good progress</div></article>
+</section>
+<div class="filter-bar" data-filter-group=".project-card"><button class="filter-chip active" data-filter="all">All projects</button><button class="filter-chip" data-filter="progress">In progress</button><button class="filter-chip" data-filter="review">In review</button><button class="filter-chip" data-filter="completed">Completed</button><label class="inline-search"><i class="bi bi-search"></i><input type="search" placeholder="Find a project..." data-filter-input=".project-card"></label></div>
+<section class="three-col">
+ <article class="content-card project-card" data-filter-value="progress"><div class="panel-heading"><span class="row-icon"><i class="bi bi-window"></i></span><span class="status in-progress">In progress</span></div><h3>Website Redesign</h3><p>Refreshing the team website and simplifying the user journey.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>Due Nov 20</span></div><div class="member-stack" style="margin:16px 0 12px"><span class="avatar">M</span><span class="avatar avatar-two">R</span><span class="avatar avatar-three">P</span></div><div class="project-progress"><div class="progress-track"><span style="width:72%"></span></div><small>72%</small></div></article>
+ <article class="content-card project-card" data-filter-value="progress"><div class="panel-heading"><span class="row-icon"><i class="bi bi-graph-up"></i></span><span class="status in-progress">In progress</span></div><h3>Customer Analytics</h3><p>Analyze customer segments, activity and retention trends.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>Due Nov 24</span></div><div class="member-stack" style="margin:16px 0 12px"><span class="avatar">M</span><span class="avatar avatar-four">A</span></div><div class="project-progress"><div class="progress-track"><span style="width:48%"></span></div><small>48%</small></div></article>
+ <article class="content-card project-card" data-filter-value="review"><div class="panel-heading"><span class="row-icon"><i class="bi bi-journal-text"></i></span><span class="status review">In review</span></div><h3>Research Paper</h3><p>Prepare the research draft, references and final review.</p><div class="resource-meta"><span>Research Group</span><span>·</span><span>Due Nov 18</span></div><div class="member-stack" style="margin:16px 0 12px"><span class="avatar">M</span><span class="avatar avatar-three">P</span><span class="avatar avatar-five">A</span></div><div class="project-progress"><div class="progress-track"><span style="width:86%"></span></div><small>86%</small></div></article>
+ <article class="content-card project-card" data-filter-value="progress"><div class="panel-heading"><span class="row-icon"><i class="bi bi-phone"></i></span><span class="status in-progress">In progress</span></div><h3>Mobile App Prototype</h3><p>Build and test the first interactive mobile prototype.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>Due Dec 02</span></div><div class="project-progress" style="margin-top:25px"><div class="progress-track"><span style="width:35%"></span></div><small>35%</small></div></article>
+ <article class="content-card project-card" data-filter-value="completed"><div class="panel-heading"><span class="row-icon"><i class="bi bi-bag-check"></i></span><span class="status completed">Completed</span></div><h3>Landing Page</h3><p>Design and launch the campaign landing page.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>Completed Nov 04</span></div><div class="project-progress" style="margin-top:25px"><div class="progress-track"><span style="width:100%"></span></div><small>100%</small></div></article>
+ <article class="content-card project-card" data-filter-value="completed"><div class="panel-heading"><span class="row-icon"><i class="bi bi-bar-chart"></i></span><span class="status completed">Completed</span></div><h3>Quarterly Insights</h3><p>Summarize the previous quarter’s performance data.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>Completed Oct 29</span></div><div class="project-progress" style="margin-top:25px"><div class="progress-track"><span style="width:100%"></span></div><small>100%</small></div></article>
+</section>
+{% endblock %}
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}

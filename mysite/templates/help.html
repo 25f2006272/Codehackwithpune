@@ -1,0 +1,82 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<section class="welcome-banner"><div><p class="eyebrow">SUPPORT CENTER</p><h1>How can we help?</h1><p>Search guides or browse the common questions below.</p><label class="inline-search" style="margin:17px 0 0;max-width:360px"><i class="bi bi-search"></i><input type="search" placeholder="Search help articles..." data-filter-input=".help-item"></label></div><div class="banner-mark"><i class="bi bi-life-preserver"></i></div></section>
+<section class="three-col">
+ <article class="content-card"><div class="card-icon"><i class="bi bi-play-circle"></i></div><h3>Getting started</h3><p>Learn the DataM layout, workspaces and your personal dashboard.</p><a href="#faq" class="text-link section-gap">Read guide <i class="bi bi-arrow-right"></i></a></article>
+ <article class="content-card"><div class="card-icon"><i class="bi bi-kanban"></i></div><h3>Projects and tasks</h3><p>Understand project progress, task ownership, deadlines and status.</p><a href="{{ url_for('projects') }}" class="text-link section-gap">Explore projects <i class="bi bi-arrow-right"></i></a></article>
+ <article class="content-card"><div class="card-icon"><i class="bi bi-people"></i></div><h3>Team collaboration</h3><p>Use handovers, shared resources and reviews to work with teammates.</p><a href="{{ url_for('handovers') }}" class="text-link section-gap">Explore handovers <i class="bi bi-arrow-right"></i></a></article>
+</section>
+<section class="content-grid section-gap">
+ <article class="panel" id="faq"><div class="panel-heading"><div><p class="eyebrow">HELP ARTICLES</p><h2>Frequently asked questions</h2></div></div>
+  <details class="faq-item help-item"><summary>How do I create a project?</summary><p>Open My Projects and use the New Project action. In this starter UI, the button is a demo control; connect it to a project form and database to save projects.</p></details>
+  <details class="faq-item help-item"><summary>How can I assign a task to a teammate?</summary><p>Open My Tasks, choose Add Task, select a workspace and assignee, set the due date and save. Task assignment is a planned backend feature in this sample.</p></details>
+  <details class="faq-item help-item"><summary>What is a handover?</summary><p>A handover is a transfer of work or files to another teammate. Include context, current status, open questions and next steps.</p></details>
+  <details class="faq-item help-item"><summary>Where can I find shared files?</summary><p>Open Library to browse documents, folders, templates and reference collections shared with your workspaces.</p></details>
+  <details class="faq-item help-item"><summary>How do I change notification settings?</summary><p>Open Settings, choose Notifications and switch the updates you want to receive. Saving preferences requires backend persistence.</p></details>
+ </article>
+ <article class="panel"><div class="panel-heading"><div><p class="eyebrow">CONTACT US</p><h2>Send a support request</h2></div></div>
+  <form data-demo-form data-success-message="Your sample support request has been submitted in this demo view.">
+   <div class="form-field"><label>Your name</label><input required value="Motu Singh"></div>
+   <div class="form-field"><label>Email address</label><input required type="email" placeholder="you@example.com"></div>
+   <div class="form-field"><label>Topic</label><select><option>General question</option><option>Projects and tasks</option><option>Workspace access</option><option>Report a problem</option></select></div>
+   <div class="form-field"><label>How can we help?</label><textarea required placeholder="Describe your question or issue..."></textarea></div>
+   <button class="btn-primary-soft" type="submit"><i class="bi bi-send"></i>Send request</button>
+  </form>
+ </article>
+</section>
+{% endblock %}
+
+
+
+{% block scripts %} 
+
+<script>
+
+(function () {
+
+    const dashboard = document.getElementById("dashboard");
+
+    const menuToggle = document.getElementById("menuToggle");
+
+
+    // Check that both elements exist
+    if (!dashboard || !menuToggle) {
+
+        console.error("Sidebar button or dashboard not found.");
+
+        return;
+
+    }
+
+
+    // Hamburger button click
+    menuToggle.addEventListener("click", function () {
+
+        const isCollapsed =
+            dashboard.classList.toggle("sidebar-collapsed");
+
+
+        // Update accessibility information
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(!isCollapsed)
+        );
+
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isCollapsed ? "Show sidebar" : "Hide sidebar"
+        );
+
+    });
+
+})();
+
+</script>
+
+{% endblock %}
