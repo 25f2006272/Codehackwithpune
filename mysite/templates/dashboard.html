@@ -6,25 +6,8 @@
 {% endblock %}
 {% block content %}
 
-<div class="dashboard" id="dashboard">
+<div class="dashboard">
 
-
-
-    <!-- HAMBURGER BUTTON -->
-    <!-- Sidebar ke bahar hai, isliye sidebar hide hone par bhi visible rahega -->
-<!-- 
-    <button class="menu-toggle"
-            id="menuToggle"
-            type="button"
-            aria-label="Hide sidebar"
-            aria-controls="sidebar"
-            aria-expanded="true">
-
-        <span></span>
-        <span></span>
-        <span></span> -->
-
-    </button>
 
 
     <!-- MAIN CONTENT -->
@@ -33,6 +16,7 @@
 
         <!-- TOP NAVBAR -->
         <header class="topbar">
+
 
             <div class="workspace-dropdown">
 
@@ -77,21 +61,62 @@
                 </button>
 
 
-                <div class="profile">
+                <!-- PROFILE DROPDOWN -->
+                <div class="profile-menu" data-profile-menu>
 
-                    <div class="profile-avatar">
-                        M
+                    <button
+                        type="button"
+                        class="profile"
+                        data-profile-toggle
+                        aria-expanded="false"
+                        aria-controls="profileDropdown"
+                    >
+
+                        <div class="profile-avatar">
+                            {{ display_name|first|upper }}
+                        </div>
+
+                        <div class="profile-info">
+
+                            <strong>{{ display_name }}</strong>
+
+                            <small>Member</small>
+
+                        </div>
+
+                        <i class="bi bi-chevron-down"></i>
+
+                    </button>
+
+
+                    <!-- DROPDOWN MENU -->
+                    <div class="profile-dropdown" id="profileDropdown" hidden>
+
+                        <div class="profile-dropdown-header">
+
+                            <strong>{{ display_name }}</strong>
+
+                            <small>{{ request.user.email }}</small>
+
+                        </div>
+
+                        <a href="{% url 'setting' %}">
+                            <i class="bi bi-gear"></i>
+                            Settings
+                        </a>
+
+                        <form action="{% url 'logout' %}" method="POST">
+
+                            {% csrf_token %}
+
+                            <button type="submit">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Logout
+                            </button>
+
+                        </form>
+
                     </div>
-
-                    <div class="profile-info">
-
-                        <strong>Motu Singh(Motka)</strong>
-
-                        <small>Member</small>
-
-                    </div>
-
-                    <i class="bi bi-chevron-down"></i>
 
                 </div>
 
@@ -115,8 +140,12 @@
                     </p>
 
                     <h1>
-                        Good evening, MOTKA
-                        <span>✦</span>
+                        {{ greeting }}, {{ first_name|upper }}
+                            <span>
+                                <svg xmlns="http://w3.org" viewBox="0 0 24 24" width="16" height="16" fill="#FFD700" style="vertical-align: middle; display: inline-block;">
+                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                </svg>
+                            </span>
                     </h1>
 
                     <p class="welcome-text">
@@ -128,19 +157,20 @@
 
                 <div class="welcome-actions">
 
-                    <button class="btn-create" type="button">
+                    <button class="btn-create"
+                            type="button"
+                            id="openCreateWorkspace">
 
                         <i class="bi bi-plus-lg"></i>
-
                         Create Workspace
 
                     </button>
 
-
-                    <button class="btn-join" type="button">
+                    <button class="btn-join"
+                            type="button"
+                            id="openJoinWorkspace">
 
                         <i class="bi bi-box-arrow-in-right"></i>
-
                         Join Workspace
 
                     </button>
@@ -149,6 +179,204 @@
 
             </section>
 
+            <!-- =====================================
+                CREATE WORKSPACE MODAL
+            ===================================== -->
+
+            <div class="kh-modal"
+                id="createWorkspaceModal"
+                hidden>
+
+                <div class="kh-modal-backdrop"
+                    data-close-modal="createWorkspaceModal">
+                </div>
+
+                <div class="kh-modal-panel"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="createWorkspaceTitle">
+
+                    <div class="kh-modal-header">
+
+                        <div>
+                            <p class="eyebrow">GET STARTED</p>
+                            <h2 id="createWorkspaceTitle">Create Workspace</h2>
+                            <p>Bring your team and project knowledge together.</p>
+                        </div>
+
+                        <button type="button"
+                                class="kh-modal-close"
+                                data-close-modal="createWorkspaceModal"
+                                aria-label="Close">
+                            &times;
+                        </button>
+
+                    </div>
+
+
+                    <form id="createWorkspaceForm">
+
+                        {% csrf_token %}
+
+                        <div class="kh-form-group">
+
+                            <label for="workspaceName">
+                                Workspace Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="workspaceName"
+                                name="name"
+                                placeholder="Enter workspace name"
+                                maxlength="150"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="kh-form-group">
+
+                            <label for="workspaceType">
+                                Workspace Type
+                            </label>
+
+                            <select id="workspaceType"
+                                    name="workspace_type"
+                                    required>
+
+                                <option value="">Select workspace type</option>
+
+                                <option value="COMPANY">Company</option>
+
+                                <option value="HACKATHON">Hackathon Team</option>
+
+                                <option value="STUDENT">Student Team</option>
+
+                                <option value="STARTUP">Startup</option>
+
+                                <option value="RESEARCH">Research Group</option>
+
+                                <option value="VOLUNTEER">Volunteer Group</option>
+
+                                <option value="PERSONAL">Personal Project Team</option>
+
+                                <option value="OTHER">Other</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="kh-form-group">
+
+                            <label for="workspaceDescription">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="workspaceDescription"
+                                name="description"
+                                rows="3"
+                                placeholder="Describe the purpose of this workspace..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <div id="createWorkspaceMessage"
+                            class="kh-form-message"
+                            role="alert"
+                            aria-live="polite">
+                        </div>
+
+
+                        <div class="kh-modal-actions">
+
+                            <button type="button"
+                                    class="btn-join"
+                                    data-close-modal="createWorkspaceModal">
+                                Cancel
+                            </button>
+
+                            <button type="submit"
+                                    class="btn-create"
+                                    id="createWorkspaceSubmit">
+                                Create Workspace
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                JOIN WORKSPACE MODAL
+            ===================================== -->
+
+            <div class="kh-modal"
+                id="joinWorkspaceModal"
+                hidden>
+
+                <div class="kh-modal-backdrop"
+                    data-close-modal="joinWorkspaceModal">
+                </div>
+
+                <div class="kh-modal-panel"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="joinWorkspaceTitle">
+
+                    <div class="kh-modal-header">
+
+                        <div>
+                            <p class="eyebrow">JOIN YOUR TEAM</p>
+                            <h2 id="joinWorkspaceTitle">Workspace Invitations</h2>
+                            <p>Review invitations sent to your account.</p>
+                        </div>
+
+                        <button type="button"
+                                class="kh-modal-close"
+                                data-close-modal="joinWorkspaceModal"
+                                aria-label="Close">
+                            &times;
+                        </button>
+
+                    </div>
+
+
+                    <div id="workspaceInvitations"
+                        aria-live="polite">
+
+                        <p>Loading invitations...</p>
+
+                    </div>
+
+
+                    <div id="joinWorkspaceMessage"
+                        class="kh-form-message"
+                        role="alert">
+                    </div>
+
+
+                    <div class="kh-modal-actions">
+
+                        <button type="button"
+                                class="btn-join"
+                                data-close-modal="joinWorkspaceModal">
+                            Close
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
             <!-- STATISTICS -->
@@ -165,7 +393,7 @@
 
                     </div>
 
-                    <h2>04</h2>
+                    <h2>{{ workspace_count }}</h2>
 
                     <small>Active workspaces</small>
 
@@ -183,7 +411,7 @@
 
                     </div>
 
-                    <h2>08</h2>
+                    <h2>{{ project_count }}</h2>
 
                     <small>Across all workspaces</small>
 
@@ -201,7 +429,7 @@
 
                     </div>
 
-                    <h2>12</h2>
+                    <h2>{{ task_count }}</h2>
 
                     <small>Tasks assigned to you</small>
 
@@ -219,7 +447,7 @@
 
                     </div>
 
-                    <h2>03</h2>
+                    <h2>{{ handover_count }}</h2>
 
                     <small>Awaiting action</small>
 
@@ -258,64 +486,34 @@
 
                     <div class="workspace-list">
 
+                        {% for item in workspaces_data %}
 
-                        <div class="workspace-item">
+                            <div class="workspace-item">
 
-                            <div class="workspace-icon icon-one">
-                                C
-                            </div>
+                                <div class="workspace-icon icon-one">
+                                    {{ item.workspace.name|first|upper }}
+                                </div>
 
-                            <div class="workspace-details">
+                                <div class="workspace-details">
 
-                                <strong>CodeHack Team</strong>
+                                    <strong>{{ item.workspace.name }}</strong>
 
-                                <small>12 Members · 4 Projects</small>
+                                    <small>
+                                        {{ item.member_count }} Members ·
+                                        {{ item.project_count }} Projects
+                                    </small>
 
-                            </div>
+                                </div>
 
-                            <i class="bi bi-chevron-right"></i>
-
-                        </div>
-
-
-
-                        <div class="workspace-item">
-
-                            <div class="workspace-icon icon-two">
-                                E
-                            </div>
-
-                            <div class="workspace-details">
-
-                                <strong>Ecometrics</strong>
-
-                                <small>08 Members · 2 Projects</small>
+                                <i class="bi bi-chevron-right"></i>
 
                             </div>
 
-                            <i class="bi bi-chevron-right"></i>
+                        {% empty %}
 
-                        </div>
+                            <p>No workspaces yet. Create or join a workspace to get started.</p>
 
-
-
-                        <div class="workspace-item">
-
-                            <div class="workspace-icon icon-three">
-                                R
-                            </div>
-
-                            <div class="workspace-details">
-
-                                <strong>Research Group</strong>
-
-                                <small>06 Members · 2 Projects</small>
-
-                            </div>
-
-                            <i class="bi bi-chevron-right"></i>
-
-                        </div>
+                        {% endfor %}
 
                     </div>
 
@@ -345,64 +543,41 @@
 
                     <div class="activity-list">
 
+                        {% for activity in recent_activities %}
 
-                        <div class="activity-item">
+                            <div class="activity-item">
 
-                            <div class="activity-icon">
+                                <div class="activity-icon">
+                                    <i class="bi bi-activity"></i>
+                                </div>
 
-                                <i class="bi bi-file-earmark-arrow-up"></i>
+                                <div>
 
-                            </div>
+                                    <strong>
+                                        {{ activity.description }}
+                                    </strong>
 
-                            <div>
+                                    <small>
+                                        {{ activity.project.name }}
+                                        ·
+                                        {% if activity.actor %}
+                                            {{ activity.actor.username }}
+                                        {% else %}
+                                            System
+                                        {% endif %}
+                                        ·
+                                        {{ activity.created_at|timesince }} ago
+                                    </small>
 
-                                <strong>File uploaded</strong>
-
-                                <small>CodeHack Team · 10 min ago</small>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="activity-item">
-
-                            <div class="activity-icon">
-
-                                <i class="bi bi-pencil-square"></i>
-
-                            </div>
-
-                            <div>
-
-                                <strong>Task updated</strong>
-
-                                <small>Ecometrics · 1 hour ago</small>
+                                </div>
 
                             </div>
 
-                        </div>
+                        {% empty %}
 
+                            <p>No recent project activity available.</p>
 
-
-                        <div class="activity-item">
-
-                            <div class="activity-icon">
-
-                                <i class="bi bi-arrow-left-right"></i>
-
-                            </div>
-
-                            <div>
-
-                                <strong>New handover</strong>
-
-                                <small>Research Group · 3 hours ago</small>
-
-                            </div>
-
-                        </div>
+                        {% endfor %}
 
                     </div>
 
@@ -439,61 +614,34 @@
                     </div>
 
 
-                    <div class="task-item">
+                    {% for task in recent_tasks %}
 
-                        <div>
+                        <div class="task-item">
 
-                            <strong>
-                                Complete project documentation
-                            </strong>
+                            <div>
 
-                            <small>CodeHack Team</small>
+                                <strong>{{ task.title }}</strong>
 
-                        </div>
+                                <small>{{ task.project.name }}</small>
 
-                        <span class="status pending">
-                            Pending
-                        </span>
+                            </div>
 
-                    </div>
+                            <span class="status
+                                {% if task.status == 'DONE' %}completed
+                                {% elif task.status == 'IN_PROGRESS' or task.status == 'BLOCKED' %}progress
+                                {% else %}pending{% endif %}">
 
+                                {{ task.get_status_display }}
 
-
-                    <div class="task-item">
-
-                        <div>
-
-                            <strong>
-                                Review website design
-                            </strong>
-
-                            <small>Ecometrics</small>
+                            </span>
 
                         </div>
 
-                        <span class="status progress">
-                            In Progress
-                        </span>
+                    {% empty %}
 
-                    </div>
+                        <p>No assigned tasks right now.</p>
 
-
-
-                    <div class="task-item">
-
-                        <div>
-
-                            <strong>
-                                Prepare research report
-                            </strong>
-
-                            <small>Research Group</small>
-
-                        </div>
-
-                        <span class="status completed">
-                            Completed
-                        </span>
+                    {% endfor %}
 
                     </div>
 
@@ -521,55 +669,42 @@
                     </div>
 
 
+                    {% for handover in recent_handovers %}
+
                     <div class="handover-item">
 
                         <div>
 
-                            <strong>Project files</strong>
+                            <strong>{{ handover.title }}</strong>
 
-                            <small>From Rahul</small>
+                            <small>
+
+                                {% if handover.departing_member_id == request.user.id %}
+                                    To {{ handover.incoming_member.username }}
+                                {% else %}
+                                    From {{ handover.departing_member.username }}
+                                {% endif %}
+
+                            </small>
 
                         </div>
 
-                        <span class="status pending">
-                            Pending
+                        <span class="status
+                            {% if handover.status == 'ACKNOWLEDGED' %}completed
+                            {% elif handover.status == 'IN_REVIEW' or handover.status == 'PROCESSING' or handover.status == 'CHANGES_REQUESTED' %}progress
+                            {% else %}pending{% endif %}">
+
+                            {{ handover.get_status_display }}
+
                         </span>
 
                     </div>
 
+                {% empty %}
 
+                    <p>No handovers available.</p>
 
-                    <div class="handover-item">
-
-                        <div>
-
-                            <strong>Design review</strong>
-
-                            <small>From Priya</small>
-
-                        </div>
-
-                        <span class="status progress">
-                            Under Review
-                        </span>
-
-                    </div>
-
-
-
-                    <div class="handover-item">
-
-                        <div>
-
-                            <strong>Final report</strong>
-
-                            <small>From Aman</small>
-
-                        </div>
-
-                        <span class="status completed">
-                            Approved
-                        </span>
+                {% endfor %}
 
                     </div>
 
@@ -589,49 +724,4 @@
 
 <!-- JAVASCRIPT -->
 {% block scripts %}
-
-<script>
-
-(function () {
-
-    const dashboard = document.getElementById("dashboard");
-
-    const menuToggle = document.getElementById("menuToggle");
-
-
-    // Check that both elements exist
-    if (!dashboard || !menuToggle) {
-
-        console.error("Sidebar button or dashboard not found.");
-
-        return;
-
-    }
-
-
-    // Hamburger button click
-    menuToggle.addEventListener("click", function () {
-
-        const isCollapsed =
-            dashboard.classList.toggle("sidebar-collapsed");
-
-
-        // Update accessibility information
-        menuToggle.setAttribute(
-            "aria-expanded",
-            String(!isCollapsed)
-        );
-
-
-        menuToggle.setAttribute(
-            "aria-label",
-            isCollapsed ? "Show sidebar" : "Hide sidebar"
-        );
-
-    });
-
-})();
-
-</script>
-
 {% endblock %}

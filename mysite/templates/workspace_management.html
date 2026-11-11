@@ -1,0 +1,1329 @@
+{% extends 'base_dash.html' %}
+
+{% block title %}Workspace Management | Knowledge Handover{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+
+{% if workspace %}
+
+<!-- ==========================================
+     WORKSPACE HEADER
+========================================== -->
+
+<section class="workspace-hero">
+
+    <div>
+        <p class="eyebrow">
+            WORKSPACE / {{ workspace.get_workspace_type_display|upper }}
+        </p>
+
+        <h1>{{ workspace.name }}</h1>
+
+        <p>
+            {{ workspace.description|default:"Manage your workspace, members and shared resources." }}
+        </p>
+
+        <div class="member-stack" style="margin-top:14px">
+
+            {% for membership in memberships|slice:":5" %}
+                <span class="avatar">
+                    {{ membership.user.username|first|upper }}
+                </span>
+            {% endfor %}
+
+            <span class="small-muted" style="margin-left:8px">
+                {{ member_count }} member{{ member_count|pluralize }}
+            </span>
+
+        </div>
+
+        {% if can_manage_members %}
+            <button type="button"
+                    class="btn-primary-soft"
+                    id="openInviteMember"
+                    style="margin-top:18px;">
+
+                <i class="bi bi-person-plus"></i>
+                Invite Member
+
+            </button>
+        {% endif %}
+
+    </div>
+
+    <div class="workspace-logo">
+        {{ workspace.name|first|upper }}
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     WORKSPACE SELECTOR
+========================================== -->
+
+<section class="panel" style="margin-top:20px;padding:18px;">
+
+    <form method="GET"
+          action="{% url 'workspace_management' %}"
+          style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+
+        <label for="workspaceSelect">
+            <strong>Select Workspace</strong>
+        </label>
+
+        <select name="workspace"
+                id="workspaceSelect"
+                onchange="this.form.submit()"
+                class="form-control"
+                style="max-width:300px;">
+
+            {% for item in workspaces %}
+
+                <option value="{{ item.id }}"
+                    {% if item.id == workspace.id %}selected{% endif %}>
+
+                    {{ item.name }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </form>
+
+</section>
+
+
+<!-- ==========================================
+     WORKSPACE STATISTICS
+========================================== -->
+
+<section class="stats-grid">
+
+    <article class="stat-card">
+
+        <div class="stat-label">
+            Members <i class="bi bi-people"></i>
+        </div>
+
+        <div class="stat-value">
+            {{ member_count }}
+        </div>
+
+        <div class="stat-note">
+            {{ pending_invitation_count }} pending invitations
+        </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+        <div class="stat-label">
+            Projects <i class="bi bi-folder2"></i>
+        </div>
+
+        <div class="stat-value">
+            {{ project_count }}
+        </div>
+
+        <div class="stat-note">
+            {{ in_progress_project_count }} active projects
+        </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+        <div class="stat-label">
+            Open tasks <i class="bi bi-check2-square"></i>
+        </div>
+
+        <div class="stat-value">
+            {{ open_task_count }}
+        </div>
+
+        <div class="stat-note">
+            {{ due_this_week_count }} due this week
+        </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+        <div class="stat-label">
+            Shared files <i class="bi bi-files"></i>
+        </div>
+
+        <div class="stat-value">
+            {{ shared_file_count }}
+        </div>
+
+        <div class="stat-note">
+            Files with direct permissions
+        </div>
+
+    </article>
+
+</section>
+
+
+<!-- ==========================================
+     WORKSPACE TABS
+========================================== -->
+
+<section class="panel">
+
+    <div class="tab-list" data-tabs>
+
+        <button type="button"
+                class="tab-button active"
+                data-tab-target="#ch-projects">
+            Projects
+        </button>
+
+        <button type="button"
+                class="tab-button"
+                data-tab-target="#ch-members">
+            Members
+        </button>
+
+        <button type="button"
+                class="tab-button"
+                data-tab-target="#ch-files">
+            Files
+        </button>
+
+        <button type="button"
+                class="tab-button"
+                data-tab-target="#ch-about">
+            About
+        </button>
+
+    </div>
+
+
+    <!-- ======================================
+         PROJECTS TAB
+    ====================================== -->
+
+    <div id="ch-projects" data-tab-panel>
+
+        {% for project in project_list %}
+
+            <div class="data-row">
+
+                <span class="row-icon">
+                    <i class="bi bi-folder2"></i>
+                </span>
+
+                <span class="row-copy">
+
+                    <strong>{{ project.name }}</strong>
+
+                    <small>
+                        {{ project.description|default:"No description available."|truncatechars:90 }}
+                    </small>
+
+                </span>
+
+                <span class="status
+                    {% if project.status == 'COMPLETED' %}
+                        completed
+                    {% elif project.status == 'ON_HOLD' %}
+                        neutral
+                    {% else %}
+                        in-progress
+                    {% endif %}">
+
+                    {{ project.get_status_display }}
+
+                </span>
+
+            </div>
+
+        {% empty %}
+
+            <p class="small-muted" style="padding:20px;">
+                No projects available in this workspace.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- ======================================
+         MEMBERS TAB
+    ====================================== -->
+
+    <div id="ch-members" data-tab-panel hidden>
+
+        <h3 style="margin:15px 0;">
+            Workspace Members ({{ member_count }})
+        </h3>
+
+
+        {% for membership in memberships %}
+
+            <div class="data-row">
+
+                <span class="avatar">
+                    {{ membership.user.username|first|upper }}
+                </span>
+
+                <span class="row-copy">
+
+                    <strong>
+
+                        {% if membership.user.get_full_name %}
+                            {{ membership.user.get_full_name }}
+                        {% else %}
+                            {{ membership.user.username }}
+                        {% endif %}
+
+                        {% if membership.user_id == request.user.id %}
+                            (You)
+                        {% endif %}
+
+                    </strong>
+
+                    <small>
+                        {{ membership.user.email|default:"Email not available" }}
+                        · Joined {{ membership.joined_at|date:"M d, Y" }}
+                    </small>
+
+                </span>
+
+
+                <span class="status
+                    {% if membership.role == 'OWNER' or membership.role == 'ADMIN' %}
+                        in-progress
+                    {% else %}
+                        neutral
+                    {% endif %}">
+
+                    {{ membership.get_role_display }}
+
+                </span>
+
+
+                <!-- MEMBER MANAGEMENT CONTROLS -->
+
+                {% if can_manage_members %}
+
+                    {% if membership.role != "OWNER" %}
+
+                        {% if membership.user_id != request.user.id %}
+
+                            {% if can_invite_admin or membership.role != "ADMIN" %}
+
+                                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+
+                                    <!-- CHANGE ROLE -->
+
+                                    <form class="member-role-form"
+                                          data-membership-id="{{ membership.id }}">
+
+                                        {% csrf_token %}
+
+                                        <select name="role"
+                                                class="form-control">
+
+                                            {% if can_invite_admin %}
+
+                                                <option value="ADMIN"
+                                                    {% if membership.role == "ADMIN" %}selected{% endif %}>
+                                                    Admin
+                                                </option>
+
+                                            {% endif %}
+
+                                            <option value="MEMBER"
+                                                {% if membership.role == "MEMBER" %}selected{% endif %}>
+                                                Member
+                                            </option>
+
+                                            <option value="VIEWER"
+                                                {% if membership.role == "VIEWER" %}selected{% endif %}>
+                                                Viewer
+                                            </option>
+
+                                        </select>
+
+                                        <button type="submit"
+                                                class="btn-secondary-soft">
+                                            Save Role
+                                        </button>
+
+                                    </form>
+
+
+                                    <!-- REMOVE MEMBER -->
+
+                                    <button type="button"
+                                            class="btn-secondary-soft remove-member-btn"
+                                            data-membership-id="{{ membership.id }}">
+
+                                        Remove
+
+                                    </button>
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <p class="small-muted" style="padding:20px;">
+                No active members found.
+            </p>
+
+        {% endfor %}
+
+
+        <!-- ==================================
+             PENDING INVITATIONS
+        ================================== -->
+
+        {% if can_manage_members %}
+
+            <h3 style="margin:25px 0 12px;">
+                Pending Invitations ({{ pending_invitation_count }})
+            </h3>
+
+            {% for invitation in pending_invitations %}
+
+                <div class="data-row">
+
+                    <span class="row-icon">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+
+                    <span class="row-copy">
+
+                        <strong>{{ invitation.email }}</strong>
+
+                        <small>
+                            Invited as {{ invitation.get_invited_role_display }}
+                            · Expires {{ invitation.expires_at|date:"M d, Y" }}
+                        </small>
+
+                    </span>
+
+                    <span class="status neutral">
+                        Pending
+                    </span>
+
+
+                    {% if can_invite_admin or invitation.invited_role != "ADMIN" %}
+
+                        <button type="button"
+                                class="btn-secondary-soft revoke-invitation-btn"
+                                data-invitation-id="{{ invitation.id }}">
+
+                            Revoke
+
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            {% empty %}
+
+                <p class="small-muted" style="padding:10px 0;">
+                    No pending invitations.
+                </p>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ======================================
+         FILES TAB
+    ====================================== -->
+
+    <div id="ch-files" data-tab-panel hidden>
+
+        <h3 style="margin:15px 0;">
+            Workspace Files ({{ file_count }})
+        </h3>
+
+
+        {% for file_asset in file_list %}
+
+            <div class="data-row">
+
+                <span class="row-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </span>
+
+                <span class="row-copy">
+
+                    <strong>{{ file_asset.name }}</strong>
+
+                    <small>
+
+                        {{ file_asset.current_version.original_filename|default:"File" }}
+
+                        {% if file_asset.current_version %}
+                            · {{ file_asset.current_version.file_size|filesizeformat }}
+                        {% endif %}
+
+                        · Uploaded by {{ file_asset.created_by.username }}
+
+                    </small>
+
+                </span>
+
+                <a class="btn-secondary-soft"
+                   href="/api/v1/files/{{ file_asset.id }}/download/">
+
+                    <i class="bi bi-download"></i>
+                    Download
+
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <p class="small-muted" style="padding:20px;">
+                No files available in this workspace.
+            </p>
+
+        {% endfor %}
+
+
+        <p class="small-muted" style="margin-top:18px;">
+            Total folders: {{ folder_count }}
+        </p>
+
+    </div>
+
+
+    <!-- ======================================
+         ABOUT TAB
+    ====================================== -->
+
+    <div id="ch-about" data-tab-panel>
+
+        <p class="page-subtitle" style="margin-top:18px;">
+
+            {{ workspace.description|default:"No workspace description has been added." }}
+
+        </p>
+
+
+        <div class="field-grid">
+
+            <div>
+
+                <p class="small-muted">
+                    Workspace Name
+                </p>
+
+                <strong>{{ workspace.name }}</strong>
+
+            </div>
+
+
+            <div>
+
+                <p class="small-muted">
+                    Workspace Type
+                </p>
+
+                <strong>
+                    {{ workspace.get_workspace_type_display }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <p class="small-muted">
+                    Owner
+                </p>
+
+                <strong>
+                    {{ workspace.owner.get_full_name|default:workspace.owner.username }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <p class="small-muted">
+                    Created
+                </p>
+
+                <strong>
+                    {{ workspace.created_at|date:"F d, Y" }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <p class="small-muted">
+                    Status
+                </p>
+
+                <strong>
+                    {{ workspace.get_status_display }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <p class="small-muted">
+                    Active Members
+                </p>
+
+                <strong>{{ member_count }}</strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     INVITE MEMBER DIALOG
+========================================== -->
+
+{% if can_manage_members %}
+
+<style>
+/* Invite Member Modal */
+
+#inviteMemberDialog {
+    width: min(500px, calc(100% - 32px));
+    max-width: 500px;
+    border: 1px solid #eadfce;
+    border-radius: 20px;
+    padding: 0;
+    background: #fffdf9;
+    color: #292724;
+    box-shadow: 0 25px 80px rgba(42, 34, 25, 0.22);
+    overflow: hidden;
+}
+
+#inviteMemberDialog::backdrop {
+    background: rgba(39, 34, 29, 0.58);
+    backdrop-filter: blur(4px);
+}
+
+.invite-modal-header {
+    padding: 27px 30px 22px;
+    background: #f4ecdf;
+    border-bottom: 1px solid #e9ddcc;
+}
+
+.invite-modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8d5bf;
+    color: #815b3e;
+    font-size: 22px;
+    margin-bottom: 17px;
+}
+
+.invite-modal-header h2 {
+    margin: 0 0 8px;
+    font-size: 23px;
+    font-weight: 700;
+    color: #292724;
+}
+
+.invite-modal-header p {
+    margin: 0;
+    color: #81766a;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.invite-modal-body {
+    padding: 26px 30px 28px;
+}
+
+.invite-field {
+    margin-bottom: 21px;
+}
+
+.invite-field label {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 13px;
+    font-weight: 650;
+    color: #49423a;
+}
+
+.invite-field input,
+.invite-field select {
+    width: 100%;
+    height: 46px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 1px solid #e3d6c6;
+    border-radius: 10px;
+    outline: none;
+    background: #fffefa;
+    color: #292724;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.invite-field input::placeholder {
+    color: #aaa094;
+}
+
+.invite-field input:focus,
+.invite-field select:focus {
+    border-color: #a8754e;
+    box-shadow: 0 0 0 3px rgba(168, 117, 78, .12);
+}
+
+.invite-field select {
+    cursor: pointer;
+}
+
+.invite-role-note {
+    margin-top: 9px;
+    color: #8c8073;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.invite-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 11px;
+    padding-top: 7px;
+}
+
+.invite-cancel-btn,
+.invite-submit-btn {
+    min-height: 43px;
+    padding: 0 19px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.invite-cancel-btn {
+    border: 1px solid #ddcbb8;
+    background: transparent;
+    color: #51473e;
+}
+
+.invite-cancel-btn:hover {
+    background: #f5eee5;
+}
+
+.invite-submit-btn {
+    border: 1px solid #292724;
+    background: #292724;
+    color: #fff;
+}
+
+.invite-submit-btn:hover {
+    background: #4a4037;
+    transform: translateY(-1px);
+}
+
+.invite-submit-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#inviteMessage {
+    margin: -4px 0 16px;
+    font-size: 13px;
+    color: #a34d3e;
+}
+
+@media (max-width: 520px) {
+    .invite-modal-header {
+        padding: 23px 21px 19px;
+    }
+
+    .invite-modal-body {
+        padding: 22px 21px;
+    }
+
+    .invite-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .invite-cancel-btn,
+    .invite-submit-btn {
+        width: 100%;
+    }
+}
+</style>
+
+
+<dialog id="inviteMemberDialog">
+
+    <div class="invite-modal-header">
+
+        <div class="invite-modal-icon">
+            <i class="bi bi-person-plus"></i>
+        </div>
+
+        <h2>Invite Team Member</h2>
+
+        <p>
+            Invite someone to collaborate in
+            <strong>{{ workspace.name }}</strong>.
+        </p>
+
+    </div>
+
+
+    <div class="invite-modal-body">
+
+        <form id="inviteMemberForm">
+
+            {% csrf_token %}
+
+            <div class="invite-field">
+
+                <label for="inviteEmail">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="inviteEmail"
+                    name="email"
+                    placeholder="Enter member's email address"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="invite-field">
+
+                <label for="inviteRole">
+                    Workspace Role
+                </label>
+
+                <select id="inviteRole" name="invited_role">
+
+                    {% if can_invite_admin %}
+                        <option value="ADMIN">Workspace Admin</option>
+                    {% endif %}
+
+                    <option value="MEMBER" selected>
+                        Member
+                    </option>
+
+                    <option value="VIEWER">
+                        Viewer
+                    </option>
+
+                </select>
+
+                <div class="invite-role-note">
+                    Select the level of access this member should have.
+                </div>
+
+            </div>
+
+
+            <div id="inviteMessage" role="alert"></div>
+
+
+            <div class="invite-modal-actions">
+
+                <button
+                    type="button"
+                    class="invite-cancel-btn"
+                    id="closeInviteMember"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="invite-submit-btn"
+                    id="sendInvitationButton"
+                >
+                    <i class="bi bi-send"></i>
+                    Send Invitation
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</dialog>
+
+{% endif %}
+
+
+{% else %}
+
+
+<!-- ==========================================
+     NO WORKSPACE
+========================================== -->
+
+<section class="content-card"
+         style="text-align:center;padding:45px 20px;">
+
+    <i class="bi bi-people" style="font-size:40px;"></i>
+
+    <h2 style="margin-top:15px;">
+        No Workspace Available
+    </h2>
+
+    <p>
+        Create or join a workspace to manage its members and resources.
+    </p>
+
+    <a href="{% url 'dashboard' %}"
+       class="btn-primary-soft">
+
+        Go to Dashboard
+
+    </a>
+
+</section>
+
+
+{% endif %}
+
+{% endblock %}
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const workspaceId = "{{ workspace.id|default:'' }}";
+
+
+    // ======================================
+    // TAB SWITCHING
+    // ======================================
+
+    const tabButtons = document.querySelectorAll(
+        "[data-tabs] .tab-button"
+    );
+
+    const tabPanels = document.querySelectorAll(
+        "[data-tab-panel]"
+    );
+
+
+    tabButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const targetSelector = button.getAttribute(
+                "data-tab-target"
+            );
+
+            const targetPanel = document.querySelector(
+                targetSelector
+            );
+
+            if (!targetPanel) {
+                return;
+            }
+
+            tabButtons.forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+            tabPanels.forEach(function (panel) {
+                panel.hidden = true;
+            });
+
+            button.classList.add("active");
+
+            targetPanel.hidden = false;
+
+        });
+
+    });
+
+
+    // ======================================
+    // CSRF TOKEN
+    // ======================================
+
+    const csrfInput = document.querySelector(
+        '#inviteMemberForm [name="csrfmiddlewaretoken"]'
+    );
+
+    const csrfToken = csrfInput
+        ? csrfInput.value
+        : "";
+
+
+    // ======================================
+    // API REQUEST HELPER
+    // ======================================
+
+    async function apiRequest(url, method, payload = null) {
+
+        const options = {
+
+            method: method,
+
+            credentials: "same-origin",
+
+            headers: {
+                "X-CSRFToken": csrfToken
+            }
+
+        };
+
+
+        if (payload !== null) {
+
+            options.headers["Content-Type"] = "application/json";
+
+            options.body = JSON.stringify(payload);
+
+        }
+
+
+        const response = await fetch(url, options);
+
+        const data = await response.json().catch(function () {
+            return {};
+        });
+
+
+        if (!response.ok) {
+
+            let message = data.detail || data.error;
+
+            if (!message) {
+                message = JSON.stringify(data);
+            }
+
+            throw new Error(message || "Request failed.");
+
+        }
+
+
+        return data;
+
+    }
+
+
+    // ======================================
+    // INVITE MEMBER MODAL
+    // ======================================
+
+    const inviteDialog = document.getElementById(
+        "inviteMemberDialog"
+    );
+
+    const openInviteButton = document.getElementById(
+        "openInviteMember"
+    );
+
+    const closeInviteButton = document.getElementById(
+        "closeInviteMember"
+    );
+
+
+    if (openInviteButton && inviteDialog) {
+
+        openInviteButton.addEventListener("click", function () {
+
+            inviteDialog.showModal();
+
+        });
+
+    }
+
+
+    if (closeInviteButton && inviteDialog) {
+
+        closeInviteButton.addEventListener("click", function () {
+
+            inviteDialog.close();
+
+        });
+
+    }
+
+
+    // ======================================
+    // SEND INVITATION
+    // ======================================
+
+    const inviteForm = document.getElementById(
+        "inviteMemberForm"
+    );
+
+
+    if (inviteForm) {
+
+        inviteForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+
+            const email = document.getElementById(
+                "inviteEmail"
+            ).value.trim();
+
+
+            const invitedRole = document.getElementById(
+                "inviteRole"
+            ).value;
+
+
+            const message = document.getElementById(
+                "inviteMessage"
+            );
+
+
+            const submitButton = document.getElementById(
+                "sendInvitationButton"
+            );
+
+
+            submitButton.disabled = true;
+
+            submitButton.textContent = "Sending...";
+
+            message.textContent = "";
+
+
+            try {
+
+                await apiRequest(
+
+                    `/api/v1/workspaces/${workspaceId}/invitations/`,
+
+                    "POST",
+
+                    {
+                        email: email,
+                        invited_role: invitedRole
+                    }
+
+                );
+
+
+                message.textContent = "Invitation created successfully.";
+
+                window.location.reload();
+
+
+            } catch (error) {
+
+                message.textContent = error.message;
+
+                submitButton.disabled = false;
+
+                submitButton.textContent = "Send Invitation";
+
+            }
+
+        });
+
+    }
+
+
+    // ======================================
+    // CHANGE MEMBER ROLE
+    // ======================================
+
+    document.querySelectorAll(".member-role-form").forEach(
+        function (form) {
+
+            form.addEventListener("submit", async function (event) {
+
+                event.preventDefault();
+
+
+                const membershipId = form.dataset.membershipId;
+
+
+                const role = form.querySelector(
+                    '[name="role"]'
+                ).value;
+
+
+                try {
+
+                    await apiRequest(
+
+                        `/api/v1/workspaces/${workspaceId}/members/${membershipId}/role/`,
+
+                        "PATCH",
+
+                        {
+                            role: role
+                        }
+
+                    );
+
+
+                    alert("Member role updated successfully.");
+
+                    window.location.reload();
+
+
+                } catch (error) {
+
+                    alert("Role update failed: " + error.message);
+
+                }
+
+            });
+
+        }
+    );
+
+
+    // ======================================
+    // REMOVE MEMBER
+    // ======================================
+
+    document.querySelectorAll(".remove-member-btn").forEach(
+        function (button) {
+
+            button.addEventListener("click", async function () {
+
+                const membershipId = button.dataset.membershipId;
+
+
+                if (!confirm("Are you sure you want to remove this member?")) {
+                    return;
+                }
+
+
+                try {
+
+                    await apiRequest(
+
+                        `/api/v1/workspaces/${workspaceId}/members/${membershipId}/`,
+
+                        "DELETE"
+
+                    );
+
+
+                    window.location.reload();
+
+
+                } catch (error) {
+
+                    alert("Member removal failed: " + error.message);
+
+                }
+
+            });
+
+        }
+    );
+
+
+    // ======================================
+    // REVOKE INVITATION
+    // ======================================
+
+    document.querySelectorAll(".revoke-invitation-btn").forEach(
+        function (button) {
+
+            button.addEventListener("click", async function () {
+
+                const invitationId = button.dataset.invitationId;
+
+
+                if (!confirm("Are you sure you want to revoke this invitation?")) {
+                    return;
+                }
+
+
+                try {
+
+                    await apiRequest(
+
+                        `/api/v1/workspaces/${workspaceId}/invitations/${invitationId}/revoke/`,
+
+                        "POST"
+
+                    );
+
+
+                    window.location.reload();
+
+
+                } catch (error) {
+
+                    alert("Invitation revoke failed: " + error.message);
+
+                }
+
+            });
+
+        }
+    );
+
+
+});
+
+</script>
+
+{% endblock %}

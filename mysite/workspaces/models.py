@@ -262,5 +262,12 @@ class WorkspaceInvitation(models.Model):
 
         ordering = ['-created_at']
 
+    class Status(models.TextChoices):
+        PENDING = 'PENDING', 'Pending'
+        ACCEPTED = 'ACCEPTED', 'Accepted'
+        DECLINED = 'DECLINED', 'Declined'
+        EXPIRED = 'EXPIRED', 'Expired'
+        REVOKED = 'REVOKED', 'Revoked'
+    
     def __str__(self):
         return f'{self.email} - {self.workspace.name}'

@@ -1,49 +1,151 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}
+Login - DataM
+{% endblock %}
+
+
+{% block navbar %}
+
+<nav class="navbar aisha-navbar">
+    <div class="container">
+        <a href="/" class="back-link">HOME</a>
+    </div>
+</nav>
+
+{% endblock %}
+
 
 {% block content %}
 
-<div class="auth-container">
+<section class="auth-section">
+
     <div class="auth-card">
 
-        <h2>Welcome Back</h2>
-        <p>Login to continue to your workspace.</p>
+        <!-- Heading -->
+        <p class="eyebrow">WELCOME BACK</p>
 
-        <form method="POST">
+        <h1>Login</h1>
+
+        <p class="subtitle">
+            Welcome back! Please enter your details.
+        </p>
+
+
+        <!-- Email and Password Login -->
+        <form action="{% url 'login' %}" method="POST">
+
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-                <div class="error">
-                    {{ form.non_field_errors }}
-                </div>
+                {{ form.non_field_errors }}
             {% endif %}
 
-            <div class="form-group">
-                <label for="{{ form.username.id_for_label }}">
-                    Username
-                </label>
-                {{ form.username }}
+            <div class="mb-3">
+
+                <label for="email">Email Address</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.password.id_for_label }}">
-                    Password
-                </label>
-                {{ form.password }}
+
+            <div class="mb-3">
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
             </div>
 
-            <input type="hidden" name="next" value="{{ next }}">
 
+            <!-- Forgot Password -->
+            <div class="text-end mb-4">
+
+                <a href="#" class="form-link">
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <!-- Login Button -->
             <button type="submit" class="auth-button">
                 Login
             </button>
+
         </form>
 
-        <p class="auth-footer">
+
+        <!-- OR Divider -->
+        <div class="auth-divider">
+
+            <span>OR</span>
+
+        </div>
+
+
+        <!-- Social Login -->
+        <div class="oauth-buttons">
+
+
+            <!-- Google Login -->
+            <a
+                href="#"
+                class="oauth-button"
+            >
+
+                <i class="bi bi-google google-icon"></i>
+
+                <span>Continue with Google</span>
+
+            </a>
+
+
+            <!-- GitHub Login -->
+            <a
+                href="#"
+                class="oauth-button"
+            >
+
+                <i class="bi bi-github github-icon"></i>
+
+                <span>Continue with GitHub</span>
+
+            </a>
+
+
+        </div>
+
+
+        <!-- Signup Link -->
+        <p class="switch-text">
+
             Don't have an account?
-            <a href="{% url 'signup' %}">Create Account</a>
+
+            <a href="{% url 'signup' %}">Sign up</a>
+
         </p>
 
+
     </div>
-</div>
+
+</section>
 
 {% endblock %}

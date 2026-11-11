@@ -1,3 +1,4 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Page Title -->
-    <title>{% block title %}Home{% endblock %}</title>
+    <title>{% block title %}Knowledge Handover{% endblock %}</title>
 
 
     <!-- Bootstrap CSS -->
@@ -21,8 +22,8 @@
 
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src=""app.js></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 </head>
 
 
@@ -36,8 +37,22 @@
 
         <div class="container">
 
-            <a class="navbar-brand" href="#home">
-                DataM
+            <a class="navbar-brand"
+               href="{% url 'home' %}"
+               aria-label="Knowledge Handover Home">
+
+                <img
+                    src="{% static 'images/knowledge_handover_logo.png' %}"
+                    alt="Knowledge Handover"
+                    style="
+                        display: block;
+                        width: 230px;
+                        max-width: 100%;
+                        height: auto;
+                        object-fit: contain;
+                    "
+                >
+
             </a>
 
 
@@ -100,51 +115,6 @@
 
     <!-- CUSTOM JAVASCRIPT -->
     {% block scripts %}
-
-<script>
-
-(function () {
-
-    const dashboard = document.getElementById("dashboard");
-
-    const menuToggle = document.getElementById("menuToggle");
-
-
-    // Check that both elements exist
-    if (!dashboard || !menuToggle) {
-
-        console.error("Sidebar button or dashboard not found.");
-
-        return;
-
-    }
-
-
-    // Hamburger button click
-    menuToggle.addEventListener("click", function () {
-
-        const isCollapsed =
-            dashboard.classList.toggle("sidebar-collapsed");
-
-
-        // Update accessibility information
-        menuToggle.setAttribute(
-            "aria-expanded",
-            String(!isCollapsed)
-        );
-
-
-        menuToggle.setAttribute(
-            "aria-label",
-            isCollapsed ? "Show sidebar" : "Hide sidebar"
-        );
-
-    });
-
-})();
-
-</script>
-
     {% endblock %}
 
 

@@ -142,10 +142,8 @@
 
 
             <!-- LOGOUT BUTTON -->
-            <form action="{{ url_for('logout') }}"
-                  method="POST"
-                  class="settings-logout-form">
-
+            <form action="{% url 'logout' %}" method="POST" class="settings-logout-form">
+                {% csrf_token %}
                 <button type="submit"
                         class="settings-logout-button">
 

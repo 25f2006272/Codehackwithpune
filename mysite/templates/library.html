@@ -1,65 +1,1760 @@
 {% extends 'base_dash.html' %}
+{% load static %}
 
-{% block title %}Dashboard{% endblock %}
-{% block navbar %}
-{% endblock %}
+{% block title %}Library | Knowledge Handover{% endblock %}
+{% block navbar %}{% endblock %}
 
 {% block content %}
-<section class="page-heading"><div><p class="eyebrow">KNOWLEDGE / SHARED RESOURCES</p><h1>Library</h1><p class="page-subtitle">Find team documents, guides, templates and reference material in one place.</p></div><div class="heading-actions"><button class="btn-primary-soft" data-demo-action="Upload resource is a demo action."><i class="bi bi-cloud-arrow-up"></i>Upload resource</button></div></section>
-<section class="stats-grid"><article class="stat-card"><div class="stat-label">All resources <i class="bi bi-collection"></i></div><div class="stat-value">24</div><div class="stat-note">Across 3 workspaces</div></article><article class="stat-card"><div class="stat-label">Documents <i class="bi bi-file-earmark-text"></i></div><div class="stat-value">16</div><div class="stat-note">PDF, DOC and notes</div></article><article class="stat-card"><div class="stat-label">Folders <i class="bi bi-folder2"></i></div><div class="stat-value">05</div><div class="stat-note">Organized collections</div></article><article class="stat-card"><div class="stat-label">Shared with you <i class="bi bi-people"></i></div><div class="stat-value">08</div><div class="stat-note">From teammates</div></article></section>
-<div class="filter-bar" data-filter-group=".resource-card"><button class="filter-chip active" data-filter="all">All resources</button><button class="filter-chip" data-filter="document">Documents</button><button class="filter-chip" data-filter="folder">Folders</button><button class="filter-chip" data-filter="template">Templates</button><label class="inline-search"><i class="bi bi-search"></i><input type="search" placeholder="Search library..." data-filter-input=".resource-card"></label></div>
-<section class="three-col">
- <article class="content-card resource-card" data-filter-value="document"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-pdf"></i></span><div><h3>Project Guidelines.pdf</h3><p>Project setup, process and delivery guidelines.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>2.4 MB</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Preview: Project Guidelines.pdf">Preview file</button></div></article>
- <article class="content-card resource-card" data-filter-value="folder"><div class="resource-card"><span class="resource-type"><i class="bi bi-folder2-open"></i></span><div><h3>Brand Assets</h3><p>Logos, colors, illustrations and design exports.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>18 files</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Brand Assets folder opened in demo mode.">Open folder</button></div></article>
- <article class="content-card resource-card" data-filter-value="template"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-richtext"></i></span><div><h3>Meeting Notes Template</h3><p>A reusable format for agendas and action items.</p><div class="resource-meta"><span>Shared library</span><span>·</span><span>Updated Nov 08</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Meeting Notes Template opened in demo mode.">Use template</button></div></article>
- <article class="content-card resource-card" data-filter-value="document"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-word"></i></span><div><h3>Research References</h3><p>Useful papers and sources for the current research.</p><div class="resource-meta"><span>Research Group</span><span>·</span><span>12 links</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Research References opened in demo mode.">Open collection</button></div></article>
- <article class="content-card resource-card" data-filter-value="document"><div class="resource-card"><span class="resource-type"><i class="bi bi-file-earmark-spreadsheet"></i></span><div><h3>Customer Metrics.xlsx</h3><p>Monthly metrics and customer segment summary.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>860 KB</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Customer Metrics.xlsx opened in demo mode.">Preview file</button></div></article>
- <article class="content-card resource-card" data-filter-value="folder"><div class="resource-card"><span class="resource-type"><i class="bi bi-folder"></i></span><div><h3>Product Screenshots</h3><p>Approved product images and screen captures.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>9 files</span></div></div></div><div style="margin-top:15px"><button class="btn-secondary-soft" data-demo-action="Product Screenshots folder opened in demo mode.">Open folder</button></div></article>
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">KNOWLEDGE / SHARED RESOURCES</p>
+        <h1>Library</h1>
+        <p class="page-subtitle">
+            Find and manage your team's documents, folders and shared resources.
+        </p>
+    </div>
+
+    <div class="heading-actions">
+        {% if workspace %}
+            <button type="button"
+                    class="btn-secondary-soft"
+                    onclick="document.getElementById('createFolderDialog').showModal()">
+                <i class="bi bi-folder-plus"></i>
+                New folder
+            </button>
+
+            <button type="button"
+                    class="btn-primary-soft"
+                    onclick="document.getElementById('uploadFileDialog').showModal()">
+                <i class="bi bi-cloud-arrow-up"></i>
+                Upload file
+            </button>
+        {% endif %}
+    </div>
 </section>
+
+
+<!-- WORKSPACE SELECTION -->
+
+<section class="content-card" style="margin-bottom:20px;">
+
+    <form method="GET"
+          action="{% url 'library' %}"
+          style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+
+        <label for="workspaceSelect">
+            <strong>Workspace:</strong>
+        </label>
+
+        <select name="workspace"
+                id="workspaceSelect"
+                class="form-control"
+                style="max-width:320px;"
+                onchange="this.form.submit()">
+
+            {% for item in workspaces %}
+                <option value="{{ item.id }}"
+                    {% if workspace.id == item.id %}selected{% endif %}>
+                    {{ item.name }}
+                </option>
+            {% empty %}
+                <option value="">No workspace available</option>
+            {% endfor %}
+
+        </select>
+
+        {% if current_folder %}
+            <input type="hidden"
+                   name="folder"
+                   value="{{ current_folder.id }}">
+        {% endif %}
+
+    </form>
+
+</section>
+
+
+<!-- STATISTICS -->
+
+<section class="stats-grid">
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Resources here
+            <i class="bi bi-collection"></i>
+        </div>
+        <div class="stat-value">{{ total_resources }}</div>
+        <div class="stat-note">Current folder location</div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Documents
+            <i class="bi bi-file-earmark-text"></i>
+        </div>
+        <div class="stat-value">{{ document_count }}</div>
+        <div class="stat-note">Available files</div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Folders
+            <i class="bi bi-folder2"></i>
+        </div>
+        <div class="stat-value">{{ folder_count }}</div>
+        <div class="stat-note">Folders at this location</div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Shared with you
+            <i class="bi bi-people"></i>
+        </div>
+        <div class="stat-value">{{ shared_file_count }}</div>
+        <div class="stat-note">Directly shared files</div>
+    </article>
+
+</section>
+
+
+{% if workspace %}
+
+<!-- SEARCH AND BREADCRUMBS -->
+
+<section class="content-card" style="margin-top:20px;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;">
+
+        <div>
+            <strong>{{ workspace.name }}</strong>
+
+            <div style="margin-top:8px;font-size:14px;">
+
+                <a href="{% url 'library' %}?workspace={{ workspace.id }}">
+                    <i class="bi bi-house-door"></i> Root
+                </a>
+
+                {% for breadcrumb in breadcrumbs %}
+                    <span style="margin:0 7px;">/</span>
+
+                    {% if not forloop.last %}
+                        <a href="{% url 'library' %}?workspace={{ workspace.id }}&folder={{ breadcrumb.id }}">
+                            {{ breadcrumb.name }}
+                        </a>
+                    {% else %}
+                        <strong>{{ breadcrumb.name }}</strong>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+
+        <form method="GET"
+              action="{% url 'library' %}"
+              class="inline-search">
+
+            <input type="hidden"
+                   name="workspace"
+                   value="{{ workspace.id }}">
+
+            {% if current_folder %}
+                <input type="hidden"
+                       name="folder"
+                       value="{{ current_folder.id }}">
+            {% endif %}
+
+            <i class="bi bi-search"></i>
+
+            <input type="search"
+                   name="search"
+                   value="{{ search_query }}"
+                   placeholder="Search files and folders...">
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- FOLDERS AND FILES -->
+
+<section class="three-col" style="margin-top:20px;">
+
+    <!-- FOLDER CARDS -->
+
+    {% for folder in folders %}
+
+        <article class="content-card resource-card">
+
+            <div class="resource-card">
+
+                <span class="resource-type">
+                    <i class="bi bi-folder-fill"></i>
+                </span>
+
+                <div>
+
+                    <h3>
+                        <a href="{% url 'library' %}?workspace={{ workspace.id }}&folder={{ folder.id }}">
+                            {{ folder.name }}
+                        </a>
+                    </h3>
+
+                    <p>
+                        {{ folder.description|default:"No description added."|truncatechars:75 }}
+                    </p>
+
+                    <div class="resource-meta">
+                        <span>{{ folder.subfolder_count }} subfolders</span>
+                        <span>·</span>
+                        <span>{{ folder.file_count }} files</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap;">
+
+                <a class="btn-secondary-soft"
+                   href="{% url 'library' %}?workspace={{ workspace.id }}&folder={{ folder.id }}">
+                    Open folder
+                </a>
+
+                {% if can_manage_permissions %}
+
+                    <button type="button"
+                            class="btn-secondary-soft manage-access-btn"
+                            data-resource-type="folder"
+                            data-resource-id="{{ folder.id }}"
+                            data-resource-name="{{ folder.name|escape }}"
+                            data-parent-chain="{% if current_folder %}{{ current_folder.id }}{% endif %}{% for breadcrumb in breadcrumbs reversed %}{% if current_folder or not forloop.first %},{% endif %}{{ breadcrumb.id }}{% endfor %}">
+
+                        <i class="bi bi-shield-lock"></i>
+                        Manage Access
+
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+    {% endfor %}
+
+
+    <!-- FILE CARDS -->
+
+    {% for file_asset in files %}
+
+        <article class="content-card resource-card">
+
+            <div class="resource-card">
+
+                <span class="resource-type">
+
+                    {% if file_asset.current_version %}
+
+                        {% if file_asset.current_version.mime_type == "application/pdf" %}
+                            <i class="bi bi-file-earmark-pdf"></i>
+
+                        {% elif "image" in file_asset.current_version.mime_type %}
+                            <i class="bi bi-file-earmark-image"></i>
+
+                        {% elif "spreadsheet" in file_asset.current_version.mime_type or "excel" in file_asset.current_version.mime_type %}
+                            <i class="bi bi-file-earmark-excel"></i>
+
+                        {% elif "word" in file_asset.current_version.mime_type or "document" in file_asset.current_version.mime_type %}
+                            <i class="bi bi-file-earmark-word"></i>
+
+                        {% else %}
+                            <i class="bi bi-file-earmark-text"></i>
+                        {% endif %}
+
+                    {% else %}
+                        <i class="bi bi-file-earmark"></i>
+                    {% endif %}
+
+                </span>
+
+
+                <div>
+
+                    <h3>{{ file_asset.name }}</h3>
+
+                    <p>
+                        {{ file_asset.description|default:"No description added."|truncatechars:75 }}
+                    </p>
+
+                    {% if file_asset.current_version %}
+
+                        <div class="resource-meta">
+
+                            <span>
+                                {{ file_asset.current_version.original_filename|truncatechars:25 }}
+                            </span>
+
+                            <span>·</span>
+
+                            <span>
+                                {{ file_asset.current_version.file_size|filesizeformat }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="resource-meta">
+                            <span>
+                                Version {{ file_asset.current_version.version_number }}
+                            </span>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap;">
+
+                <a class="btn-secondary-soft"
+                   href="/api/v1/files/{{ file_asset.id }}/download/">
+
+                    <i class="bi bi-download"></i>
+                    Download
+
+                </a>
+
+
+                <a class="btn-secondary-soft"
+                   href="/api/v1/files/{{ file_asset.id }}/">
+
+                    <i class="bi bi-info-circle"></i>
+                    Details
+
+                </a>
+
+
+                {% if can_manage_permissions %}
+
+                    <button type="button"
+                            class="btn-secondary-soft manage-access-btn"
+                            data-resource-type="file"
+                            data-resource-id="{{ file_asset.id }}"
+                            data-resource-name="{{ file_asset.name|escape }}"
+                            data-parent-chain="{% if current_folder %}{{ current_folder.id }}{% endif %}{% for breadcrumb in breadcrumbs reversed %}{% if current_folder or not forloop.first %},{% endif %}{{ breadcrumb.id }}{% endfor %}">
+
+                        <i class="bi bi-shield-lock"></i>
+                        Manage Access
+
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+    {% endfor %}
+
+
+    {% if not folders and not files %}
+
+        <article class="content-card"
+                 style="grid-column:1/-1;text-align:center;padding:45px 20px;">
+
+            <i class="bi bi-folder2-open"
+               style="font-size:42px;opacity:.55;"></i>
+
+            <h3 style="margin-top:15px;">
+                No resources found
+            </h3>
+
+            <p>
+                This location is empty. Create a folder or upload your first file.
+            </p>
+
+        </article>
+
+    {% endif %}
+
+</section>
+
+
+{% else %}
+
+<section class="content-card" style="text-align:center;padding:45px 20px;">
+
+    <i class="bi bi-inboxes" style="font-size:42px;"></i>
+
+    <h3>No workspace available</h3>
+
+    <p>Create or join a workspace before using the Library.</p>
+
+</section>
+
+{% endif %}
+
+
+<!-- ==========================================
+     CREATE FOLDER DIALOG
+========================================== -->
+
+{% if workspace %}
+
+<dialog id="createFolderDialog" class="library-dialog">
+
+    <div class="library-dialog-content">
+
+        <h2>Create new folder</h2>
+
+        <p>Create a folder inside the current location.</p>
+
+        <form id="createFolderForm">
+
+            {% csrf_token %}
+
+            <label for="folderName">Folder name</label>
+
+            <input type="text"
+                   id="folderName"
+                   name="name"
+                   class="form-control"
+                   maxlength="150"
+                   required>
+
+
+            <label for="folderDescription" style="margin-top:12px;">
+                Description
+            </label>
+
+            <textarea id="folderDescription"
+                      name="description"
+                      class="form-control"
+                      rows="3"></textarea>
+
+
+            <div class="library-dialog-actions">
+
+                <button type="button"
+                        class="btn-secondary-soft"
+                        onclick="document.getElementById('createFolderDialog').close()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn-primary-soft">
+                    Create folder
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</dialog>
+
+
+<!-- ==========================================
+     UPLOAD FILE DIALOG
+========================================== -->
+
+<dialog id="uploadFileDialog" class="library-dialog">
+
+    <div class="library-dialog-content">
+
+        <h2>Upload file</h2>
+
+        <p>Upload a document to the current workspace location.</p>
+
+        <form id="uploadFileForm">
+
+            {% csrf_token %}
+
+            <label for="libraryFile">Choose file</label>
+
+            <input type="file"
+                   id="libraryFile"
+                   name="file"
+                   class="form-control"
+                   required>
+
+
+            <label for="fileDescription" style="margin-top:12px;">
+                Description
+            </label>
+
+            <textarea id="fileDescription"
+                      name="description"
+                      class="form-control"
+                      rows="3"></textarea>
+
+
+            <div class="library-dialog-actions">
+
+                <button type="button"
+                        class="btn-secondary-soft"
+                        onclick="document.getElementById('uploadFileDialog').close()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn-primary-soft">
+                    Upload file
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</dialog>
+
+
+{% endif %}
+
+
+<!-- ==========================================
+     MANAGE ACCESS DIALOG
+========================================== -->
+
+{% if workspace and can_manage_permissions %}
+
+<dialog id="manageAccessDialog" class="library-dialog access-dialog">
+
+    <div class="access-dialog-header">
+
+        <div class="access-icon">
+            <i class="bi bi-shield-lock"></i>
+        </div>
+
+        <div>
+            <h2>Manage Access</h2>
+            <p id="accessResourceName">Resource permissions</p>
+        </div>
+
+        <button type="button"
+                id="closeAccessDialog"
+                class="access-close-btn"
+                aria-label="Close">
+            &times;
+        </button>
+
+    </div>
+
+
+    <div class="access-dialog-content">
+
+        <div class="access-info">
+            <i class="bi bi-info-circle"></i>
+            Manage direct access and permissions inherited from parent folders.
+            Workspace role-based access may also apply.
+        </div>
+
+
+        <!-- GRANT ACCESS -->
+
+        <form id="grantPermissionForm">
+
+            {% csrf_token %}
+
+            <h3>Grant Access</h3>
+
+            <div class="access-form-grid">
+
+                <div>
+
+                    <label for="permissionUser">
+                        Select Member
+                    </label>
+
+                    <select id="permissionUser"
+                            name="user_id"
+                            class="form-control"
+                            required>
+
+                        <option value="">Choose a member</option>
+
+                        {% for membership in workspace_members %}
+
+                            <option value="{{ membership.user_id }}">
+                                {{ membership.user.username }}
+                                {% if membership.user.email %}
+                                    ({{ membership.user.email }})
+                                {% endif %}
+                            </option>
+
+                        {% empty %}
+
+                            <option value="" disabled>
+                                No other active members
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="permissionLevel">
+                        Access Level
+                    </label>
+
+                    <select id="permissionLevel"
+                            name="access_level"
+                            class="form-control"
+                            required>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit"
+                    class="btn-primary-soft"
+                    id="grantPermissionButton"
+                    style="margin-top:14px;">
+
+                <i class="bi bi-person-check"></i>
+                Grant Access
+
+            </button>
+
+        </form>
+
+
+        <div id="permissionMessage"
+             class="permission-message"
+             role="alert"></div>
+
+
+        <!-- EXISTING PERMISSIONS -->
+
+        <div class="permission-list-section">
+
+            <h3>Current Access</h3>
+
+            <div id="permissionList">
+
+                <p class="small-muted">
+                    Loading permissions...
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</dialog>
+
+{% endif %}
+
+
+<style>
+
+/* EXISTING LIBRARY DIALOGS */
+
+.library-dialog {
+    border: none;
+    border-radius: 14px;
+    width: min(440px, calc(100% - 30px));
+    padding: 0;
+    box-shadow: 0 15px 50px rgba(0,0,0,.22);
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.library-dialog::backdrop {
+    background: rgba(20, 24, 30, .55);
+    backdrop-filter: blur(3px);
+}
+
+.library-dialog-content {
+    padding: 25px;
+}
+
+.library-dialog-content h2 {
+    margin: 0 0 8px;
+}
+
+.library-dialog-content p {
+    margin-bottom: 20px;
+}
+
+.library-dialog-content label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+.library-dialog-content input,
+.library-dialog-content textarea {
+    width: 100%;
+}
+
+.library-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+
+/* MANAGE ACCESS DIALOG */
+
+.access-dialog {
+    width: min(650px, calc(100% - 30px));
+    max-width: 650px;
+    border-radius: 18px;
+    background: #fffdf9;
+    color: #292724;
+    border: 1px solid #e8ddce;
+}
+
+.access-dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 22px 25px;
+    background: #f4ecdf;
+    border-bottom: 1px solid #e8ddce;
+}
+
+.access-icon {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8d5bf;
+    color: #815b3e;
+    font-size: 21px;
+}
+
+.access-dialog-header h2 {
+    margin: 0 0 5px;
+    font-size: 21px;
+}
+
+.access-dialog-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #81766a;
+    overflow-wrap: anywhere;
+}
+
+.access-close-btn {
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    color: #65594d;
+    cursor: pointer;
+}
+
+.access-dialog-content {
+    padding: 25px;
+}
+
+.access-info {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 13px;
+    border-radius: 9px;
+    background: #f7f1e8;
+    color: #786957;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.access-info i {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.access-dialog-content h3 {
+    margin: 0 0 14px;
+    font-size: 16px;
+}
+
+.access-form-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 14px;
+}
+
+.access-dialog-content label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.access-dialog-content select {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+}
+
+.permission-message {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #a34d3e;
+}
+
+.permission-list-section {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid #eee5da;
+}
+
+.permission-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid #eee8df;
+    flex-wrap: wrap;
+}
+
+.permission-user-icon {
+    width: 37px;
+    height: 37px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #efe4d6;
+    color: #795a40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.permission-user-details {
+    flex: 1;
+    min-width: 100px;
+}
+
+.permission-user-details strong {
+    display: block;
+    font-size: 13px;
+}
+
+.permission-user-details small {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #887d71;
+}
+
+.permission-source-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #eee5d9;
+    color: #785a40;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.permission-direct-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.permission-direct-actions select {
+    width: 110px;
+    height: 34px;
+    padding: 0 7px;
+    border: 1px solid #e3d6c6;
+    border-radius: 7px;
+    background: #fffefa;
+    font-size: 11px;
+}
+
+.permission-action-btn {
+    border: 1px solid #dfd2c2;
+    background: #fffdf9;
+    color: #65513d;
+    border-radius: 7px;
+    padding: 7px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.permission-action-btn:hover {
+    background: #f3eadd;
+}
+
+.permission-revoke-btn {
+    color: #a34d3e;
+}
+
+.permission-revoke-btn:hover {
+    background: #faeeee;
+}
+
+.permission-empty {
+    padding: 18px 0;
+    color: #8b8175;
+    font-size: 13px;
+    text-align: center;
+}
+
+@media (max-width: 560px) {
+
+    .access-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .access-dialog-content {
+        padding: 18px;
+    }
+
+    .access-dialog-header {
+        padding: 18px;
+    }
+
+    .permission-row {
+        align-items: flex-start;
+    }
+
+    .permission-direct-actions {
+        width: 100%;
+        padding-left: 49px;
+    }
+
+}
+
+</style>
+
 {% endblock %}
 
 
-{% block scripts %} 
+{% block scripts %}
 
 <script>
 
 (function () {
 
-    const dashboard = document.getElementById("dashboard");
+    const workspaceId = "{{ workspace.id|default:'' }}";
 
-    const menuToggle = document.getElementById("menuToggle");
+    const currentFolderId = "{{ current_folder.id|default:'' }}";
 
 
-    // Check that both elements exist
-    if (!dashboard || !menuToggle) {
+    // ======================================
+    // COMMON ERROR HANDLER
+    // ======================================
 
-        console.error("Sidebar button or dashboard not found.");
+    function getErrorMessage(data) {
 
-        return;
+        if (data.detail) return data.detail;
+
+        if (data.error) return data.error;
+
+        return JSON.stringify(data);
 
     }
 
 
-    // Hamburger button click
-    menuToggle.addEventListener("click", function () {
+    // ======================================
+    // CSRF AND API REQUEST
+    // ======================================
 
-        const isCollapsed =
-            dashboard.classList.toggle("sidebar-collapsed");
+    async function sendRequest(url, options, csrfToken) {
+
+        options.credentials = "same-origin";
+
+        options.headers = {
+            ...(options.headers || {}),
+            "X-CSRFToken": csrfToken,
+            "Accept": "application/json"
+        };
+
+        const response = await fetch(url, options);
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(
+                getErrorMessage(data) || "Request failed."
+            );
+        }
+
+        return data;
+
+    }
 
 
-        // Update accessibility information
-        menuToggle.setAttribute(
-            "aria-expanded",
-            String(!isCollapsed)
+    async function permissionRequest(url, method, csrfToken, payload = null) {
+
+        const options = {
+            method: method,
+            credentials: "same-origin",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "Accept": "application/json"
+            }
+        };
+
+        if (payload !== null) {
+
+            options.headers["Content-Type"] = "application/json";
+
+            options.body = JSON.stringify(payload);
+
+        }
+
+        const response = await fetch(url, options);
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+
+            throw new Error(
+                getErrorMessage(data) || "Permission request failed."
+            );
+
+        }
+
+        return data;
+
+    }
+
+
+    // ======================================
+    // CREATE FOLDER
+    // ======================================
+
+    const createFolderForm = document.getElementById("createFolderForm");
+
+    if (createFolderForm) {
+
+        createFolderForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const csrfToken = this.querySelector(
+                '[name="csrfmiddlewaretoken"]'
+            ).value;
+
+            const payload = {
+                name: document.getElementById("folderName").value.trim(),
+                description: document.getElementById("folderDescription").value.trim(),
+                parent_id: currentFolderId ? Number(currentFolderId) : null
+            };
+
+            if (!payload.name) {
+
+                alert("Please enter a folder name.");
+
+                return;
+
+            }
+
+            try {
+
+                await sendRequest(
+                    `/api/v1/workspaces/${workspaceId}/folders/`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload)
+                    },
+                    csrfToken
+                );
+
+                window.location.reload();
+
+            } catch (error) {
+
+                alert("Folder creation failed: " + error.message);
+
+            }
+
+        });
+
+    }
+
+
+    // ======================================
+    // UPLOAD FILE
+    // ======================================
+
+    const uploadFileForm = document.getElementById("uploadFileForm");
+
+    if (uploadFileForm) {
+
+        uploadFileForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const csrfToken = this.querySelector(
+                '[name="csrfmiddlewaretoken"]'
+            ).value;
+
+            const selectedFile = document.getElementById(
+                "libraryFile"
+            ).files[0];
+
+            if (!selectedFile) {
+
+                alert("Please select a file.");
+
+                return;
+
+            }
+
+            const formData = new FormData();
+
+            formData.append("file", selectedFile);
+
+            formData.append(
+                "description",
+                document.getElementById("fileDescription").value.trim()
+            );
+
+            if (currentFolderId) {
+                formData.append("folder_id", currentFolderId);
+            }
+
+            try {
+
+                await sendRequest(
+                    `/api/v1/workspaces/${workspaceId}/files/`,
+                    {
+                        method: "POST",
+                        body: formData
+                    },
+                    csrfToken
+                );
+
+                window.location.reload();
+
+            } catch (error) {
+
+                alert("File upload failed: " + error.message);
+
+            }
+
+        });
+
+    }
+
+
+    // ======================================
+    // MANAGE ACCESS
+    // ======================================
+
+    const accessDialog = document.getElementById(
+        "manageAccessDialog"
+    );
+
+    const accessTitle = document.getElementById(
+        "accessResourceName"
+    );
+
+    const permissionList = document.getElementById(
+        "permissionList"
+    );
+
+    const permissionMessage = document.getElementById(
+        "permissionMessage"
+    );
+
+    const permissionGrantForm = document.getElementById(
+        "grantPermissionForm"
+    );
+
+    const permissionLevel = document.getElementById(
+        "permissionLevel"
+    );
+
+    const permissionUser = document.getElementById(
+        "permissionUser"
+    );
+
+
+    let currentAccessTarget = null;
+
+
+    function permissionEndpoint(type, id) {
+
+        const resource = type === "folder"
+            ? "folders"
+            : "files";
+
+        return `/api/v1/${resource}/${id}/permissions/`;
+
+    }
+
+
+    function getPermissionLevels(type) {
+
+        if (type === "folder") {
+
+            return [
+                ["VIEW", "View"],
+                ["UPLOAD", "Upload"],
+                ["EDIT", "Edit"],
+                ["MANAGE", "Manage"]
+            ];
+
+        }
+
+        return [
+            ["VIEW", "View"],
+            ["DOWNLOAD", "Download"],
+            ["EDIT", "Edit"],
+            ["MANAGE", "Manage"]
+        ];
+
+    }
+
+
+    function populatePermissionLevels(type) {
+
+        permissionLevel.innerHTML = "";
+
+        getPermissionLevels(type).forEach(function (item) {
+
+            const option = document.createElement("option");
+
+            option.value = item[0];
+
+            option.textContent = item[1];
+
+            permissionLevel.appendChild(option);
+
+        });
+
+    }
+
+
+    function createPermissionRow(permission, isDirect, sourceFolderId = null) {
+
+        const row = document.createElement("div");
+
+        row.className = "permission-row";
+
+
+        const icon = document.createElement("div");
+
+        icon.className = "permission-user-icon";
+
+        icon.textContent = (
+            permission.user_username || "U"
+        ).charAt(0).toUpperCase();
+
+
+        const userDetails = document.createElement("div");
+
+        userDetails.className = "permission-user-details";
+
+
+        const username = document.createElement("strong");
+
+        username.textContent = permission.user_username || "Workspace member";
+
+
+        const source = document.createElement("small");
+
+        if (isDirect) {
+
+            source.textContent = "Direct permission";
+
+        } else {
+
+            source.textContent = `Inherited from folder #${sourceFolderId}`;
+
+        }
+
+
+        userDetails.appendChild(username);
+
+        userDetails.appendChild(source);
+
+
+        const badge = document.createElement("span");
+
+        badge.className = "permission-source-badge";
+
+        badge.textContent = permission.access_level;
+
+
+        row.appendChild(icon);
+
+        row.appendChild(userDetails);
+
+        row.appendChild(badge);
+
+
+        if (isDirect) {
+
+            const actions = document.createElement("div");
+
+            actions.className = "permission-direct-actions";
+
+
+            // CHANGE PERMISSION
+
+            const select = document.createElement("select");
+
+            getPermissionLevels(currentAccessTarget.type).forEach(
+                function (item) {
+
+                    const option = document.createElement("option");
+
+                    option.value = item[0];
+
+                    option.textContent = item[1];
+
+                    if (item[0] === permission.access_level) {
+                        option.selected = true;
+                    }
+
+                    select.appendChild(option);
+
+                }
+            );
+
+
+            const saveButton = document.createElement("button");
+
+            saveButton.type = "button";
+
+            saveButton.className = "permission-action-btn";
+
+            saveButton.textContent = "Save";
+
+
+            saveButton.addEventListener("click", async function () {
+
+                saveButton.disabled = true;
+
+                try {
+
+                    await permissionRequest(
+                        permissionEndpoint(
+                            currentAccessTarget.type,
+                            currentAccessTarget.id
+                        ) + `${permission.id}/`,
+                        "PATCH",
+                        currentAccessTarget.csrfToken,
+                        {
+                            access_level: select.value
+                        }
+                    );
+
+                    await loadPermissions();
+
+                    permissionMessage.textContent =
+                        "Permission updated successfully.";
+
+                } catch (error) {
+
+                    alert("Update failed: " + error.message);
+
+                } finally {
+
+                    saveButton.disabled = false;
+
+                }
+
+            });
+
+
+            // REVOKE PERMISSION
+
+            const revokeButton = document.createElement("button");
+
+            revokeButton.type = "button";
+
+            revokeButton.className =
+                "permission-action-btn permission-revoke-btn";
+
+            revokeButton.textContent = "Revoke";
+
+
+            revokeButton.addEventListener("click", async function () {
+
+                if (!confirm(
+                    "Are you sure you want to revoke this permission?"
+                )) {
+                    return;
+                }
+
+                revokeButton.disabled = true;
+
+                try {
+
+                    await permissionRequest(
+                        permissionEndpoint(
+                            currentAccessTarget.type,
+                            currentAccessTarget.id
+                        ) + `${permission.id}/`,
+                        "DELETE",
+                        currentAccessTarget.csrfToken
+                    );
+
+                    await loadPermissions();
+
+                    permissionMessage.textContent =
+                        "Permission revoked successfully.";
+
+                } catch (error) {
+
+                    alert("Revoke failed: " + error.message);
+
+                } finally {
+
+                    revokeButton.disabled = false;
+
+                }
+
+            });
+
+
+            actions.appendChild(select);
+
+            actions.appendChild(saveButton);
+
+            actions.appendChild(revokeButton);
+
+            row.appendChild(actions);
+
+        } else {
+
+            const inheritedBadge = document.createElement("span");
+
+            inheritedBadge.className = "permission-source-badge";
+
+            inheritedBadge.textContent = "Inherited";
+
+            row.appendChild(inheritedBadge);
+
+        }
+
+
+        return row;
+
+    }
+
+
+    // LOAD DIRECT AND INHERITED PERMISSIONS
+
+    async function loadPermissions() {
+
+        permissionList.innerHTML = "";
+
+        const loading = document.createElement("p");
+
+        loading.className = "small-muted";
+
+        loading.textContent = "Loading permissions...";
+
+        permissionList.appendChild(loading);
+
+
+        try {
+
+            // Direct access on selected file or folder
+
+            const directPermissions = await permissionRequest(
+                permissionEndpoint(
+                    currentAccessTarget.type,
+                    currentAccessTarget.id
+                ),
+                "GET",
+                currentAccessTarget.csrfToken
+            );
+
+
+            const seenUsers = new Set();
+
+            const results = [];
+
+
+            directPermissions.forEach(function (permission) {
+
+                if (!permission.is_active) return;
+
+                seenUsers.add(Number(permission.user_id));
+
+                results.push({
+                    permission: permission,
+                    direct: true,
+                    sourceFolderId: null
+                });
+
+            });
+
+
+            // Check permissions inherited from parent folders.
+            // The chain is nearest parent first.
+
+            for (const folderId of currentAccessTarget.parentChain) {
+
+                const inheritedPermissions = await permissionRequest(
+                    `/api/v1/folders/${folderId}/permissions/`,
+                    "GET",
+                    currentAccessTarget.csrfToken
+                );
+
+
+                inheritedPermissions.forEach(function (permission) {
+
+                    if (!permission.is_active) return;
+
+                    const userId = Number(permission.user_id);
+
+                    // The nearest explicit permission takes precedence.
+                    if (seenUsers.has(userId)) return;
+
+                    seenUsers.add(userId);
+
+                    results.push({
+                        permission: permission,
+                        direct: false,
+                        sourceFolderId: folderId
+                    });
+
+                });
+
+            }
+
+
+            permissionList.innerHTML = "";
+
+
+            if (results.length === 0) {
+
+                const empty = document.createElement("p");
+
+                empty.className = "permission-empty";
+
+                empty.textContent =
+                    "No explicit permissions found for this resource.";
+
+                permissionList.appendChild(empty);
+
+                return;
+
+            }
+
+
+            results.forEach(function (item) {
+
+                permissionList.appendChild(
+                    createPermissionRow(
+                        item.permission,
+                        item.direct,
+                        item.sourceFolderId
+                    )
+                );
+
+            });
+
+        } catch (error) {
+
+            permissionList.innerHTML = "";
+
+            const errorMessage = document.createElement("p");
+
+            errorMessage.className = "permission-empty";
+
+            errorMessage.textContent =
+                "Could not load permissions: " + error.message;
+
+            permissionList.appendChild(errorMessage);
+
+        }
+
+    }
+
+
+    // OPEN MANAGE ACCESS DIALOG
+
+    document.querySelectorAll(".manage-access-btn").forEach(
+        function (button) {
+
+            button.addEventListener("click", async function () {
+
+                const csrfToken = document.querySelector(
+                    '#grantPermissionForm [name="csrfmiddlewaretoken"]'
+                ).value;
+
+
+                currentAccessTarget = {
+
+                    type: button.dataset.resourceType,
+
+                    id: Number(button.dataset.resourceId),
+
+                    name: button.dataset.resourceName,
+
+                    parentChain: button.dataset.parentChain
+                        ? button.dataset.parentChain
+                            .split(",")
+                            .filter(Boolean)
+                            .map(Number)
+                        : [],
+
+                    csrfToken: csrfToken
+
+                };
+
+
+                accessTitle.textContent =
+                    currentAccessTarget.name;
+
+
+                permissionMessage.textContent = "";
+
+
+                populatePermissionLevels(
+                    currentAccessTarget.type
+                );
+
+
+                if (permissionGrantForm) {
+                    permissionGrantForm.reset();
+                }
+
+
+                accessDialog.showModal();
+
+                await loadPermissions();
+
+            });
+
+        }
+    );
+
+
+    // CLOSE ACCESS DIALOG
+
+    const closeAccessDialog = document.getElementById(
+        "closeAccessDialog"
+    );
+
+    if (closeAccessDialog) {
+
+        closeAccessDialog.addEventListener("click", function () {
+
+            accessDialog.close();
+
+        });
+
+    }
+
+
+    // GRANT PERMISSION
+
+    if (permissionGrantForm) {
+
+        permissionGrantForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                if (!currentAccessTarget) return;
+
+
+                const userId = permissionUser.value;
+
+                const accessLevel = permissionLevel.value;
+
+
+                if (!userId) {
+
+                    permissionMessage.textContent =
+                        "Please select a workspace member.";
+
+                    return;
+
+                }
+
+
+                const submitButton = document.getElementById(
+                    "grantPermissionButton"
+                );
+
+                submitButton.disabled = true;
+
+                submitButton.textContent = "Granting...";
+
+
+                try {
+
+                    await permissionRequest(
+                        permissionEndpoint(
+                            currentAccessTarget.type,
+                            currentAccessTarget.id
+                        ),
+                        "POST",
+                        currentAccessTarget.csrfToken,
+                        {
+                            user_id: Number(userId),
+                            access_level: accessLevel
+                        }
+                    );
+
+
+                    permissionMessage.textContent =
+                        "Access granted successfully.";
+
+
+                    permissionGrantForm.reset();
+
+                    populatePermissionLevels(
+                        currentAccessTarget.type
+                    );
+
+                    await loadPermissions();
+
+
+                } catch (error) {
+
+                    permissionMessage.textContent =
+                        "Access could not be granted: " + error.message;
+
+                } finally {
+
+                    submitButton.disabled = false;
+
+                    submitButton.innerHTML =
+                        '<i class="bi bi-person-check"></i> Grant Access';
+
+                }
+
+            }
+
         );
 
-
-        menuToggle.setAttribute(
-            "aria-label",
-            isCollapsed ? "Show sidebar" : "Hide sidebar"
-        );
-
-    });
+    }
 
 })();
 

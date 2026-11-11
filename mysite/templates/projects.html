@@ -1,72 +1,668 @@
 {% extends 'base_dash.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}My Projects{% endblock %}
+
 {% block navbar %}
 {% endblock %}
 
 {% block content %}
-<section class="page-heading"><div><p class="eyebrow">WORK / PROJECT MANAGEMENT</p><h1>My Projects</h1><p class="page-subtitle">Plan work, see progress and keep every team project moving.</p></div><div class="heading-actions"><button class="btn-primary-soft" data-demo-action="New project form is a demo action."><i class="bi bi-plus-lg"></i>New project</button></div></section>
+
+<!-- PAGE HEADING -->
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">WORK / PROJECT MANAGEMENT</p>
+        <h1>My Projects</h1>
+        <p class="page-subtitle">
+            Plan work, see progress and keep every team project moving.
+        </p>
+    </div>
+
+    <div class="heading-actions">
+        <button class="btn-primary-soft" id="newProjectBtn" type="button">
+            <i class="bi bi-plus-lg"></i>
+            New project
+        </button>
+    </div>
+</section>
+
+
+<!-- PROJECT STATISTICS -->
+
 <section class="stats-grid">
- <article class="stat-card"><div class="stat-label">Total projects <i class="bi bi-folder2-open"></i></div><div class="stat-value">08</div><div class="stat-note">Across 3 workspaces</div></article>
- <article class="stat-card"><div class="stat-label">In progress <i class="bi bi-activity"></i></div><div class="stat-value">05</div><div class="stat-note">2 updated this week</div></article>
- <article class="stat-card"><div class="stat-label">In review <i class="bi bi-eye"></i></div><div class="stat-value">01</div><div class="stat-note">Waiting for feedback</div></article>
- <article class="stat-card"><div class="stat-label">Completed <i class="bi bi-check-circle"></i></div><div class="stat-value">02</div><div class="stat-note positive">Good progress</div></article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Total projects
+            <i class="bi bi-folder2-open"></i>
+        </div>
+        <div class="stat-value">{{ total_projects }}</div>
+        <div class="stat-note">Projects you can access</div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            In progress
+            <i class="bi bi-activity"></i>
+        </div>
+        <div class="stat-value">{{ in_progress_count }}</div>
+        <div class="stat-note">Currently active</div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Planning
+            <i class="bi bi-calendar-check"></i>
+        </div>
+        <div class="stat-value">{{ planning_count }}</div>
+        <div class="stat-note">Projects being planned</div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-label">
+            Completed
+            <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="stat-value">{{ completed_count }}</div>
+        <div class="stat-note positive">Completed projects</div>
+    </article>
+
 </section>
-<div class="filter-bar" data-filter-group=".project-card"><button class="filter-chip active" data-filter="all">All projects</button><button class="filter-chip" data-filter="progress">In progress</button><button class="filter-chip" data-filter="review">In review</button><button class="filter-chip" data-filter="completed">Completed</button><label class="inline-search"><i class="bi bi-search"></i><input type="search" placeholder="Find a project..." data-filter-input=".project-card"></label></div>
+
+
+<!-- FILTERS AND SEARCH -->
+
+<div class="filter-bar" data-filter-group=".project-card">
+
+    <button class="filter-chip active" data-filter="all">
+        All projects
+    </button>
+
+    <button class="filter-chip" data-filter="progress">
+        In progress
+    </button>
+
+    <button class="filter-chip" data-filter="planning">
+        Planning
+    </button>
+
+    <button class="filter-chip" data-filter="completed">
+        Completed
+    </button>
+
+    <label class="inline-search">
+        <i class="bi bi-search"></i>
+        <input
+            type="search"
+            placeholder="Find a project..."
+            data-filter-input=".project-card"
+        >
+    </label>
+
+</div>
+
+
+<!-- PROJECT CARDS -->
+
 <section class="three-col">
- <article class="content-card project-card" data-filter-value="progress"><div class="panel-heading"><span class="row-icon"><i class="bi bi-window"></i></span><span class="status in-progress">In progress</span></div><h3>Website Redesign</h3><p>Refreshing the team website and simplifying the user journey.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>Due Nov 20</span></div><div class="member-stack" style="margin:16px 0 12px"><span class="avatar">M</span><span class="avatar avatar-two">R</span><span class="avatar avatar-three">P</span></div><div class="project-progress"><div class="progress-track"><span style="width:72%"></span></div><small>72%</small></div></article>
- <article class="content-card project-card" data-filter-value="progress"><div class="panel-heading"><span class="row-icon"><i class="bi bi-graph-up"></i></span><span class="status in-progress">In progress</span></div><h3>Customer Analytics</h3><p>Analyze customer segments, activity and retention trends.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>Due Nov 24</span></div><div class="member-stack" style="margin:16px 0 12px"><span class="avatar">M</span><span class="avatar avatar-four">A</span></div><div class="project-progress"><div class="progress-track"><span style="width:48%"></span></div><small>48%</small></div></article>
- <article class="content-card project-card" data-filter-value="review"><div class="panel-heading"><span class="row-icon"><i class="bi bi-journal-text"></i></span><span class="status review">In review</span></div><h3>Research Paper</h3><p>Prepare the research draft, references and final review.</p><div class="resource-meta"><span>Research Group</span><span>·</span><span>Due Nov 18</span></div><div class="member-stack" style="margin:16px 0 12px"><span class="avatar">M</span><span class="avatar avatar-three">P</span><span class="avatar avatar-five">A</span></div><div class="project-progress"><div class="progress-track"><span style="width:86%"></span></div><small>86%</small></div></article>
- <article class="content-card project-card" data-filter-value="progress"><div class="panel-heading"><span class="row-icon"><i class="bi bi-phone"></i></span><span class="status in-progress">In progress</span></div><h3>Mobile App Prototype</h3><p>Build and test the first interactive mobile prototype.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>Due Dec 02</span></div><div class="project-progress" style="margin-top:25px"><div class="progress-track"><span style="width:35%"></span></div><small>35%</small></div></article>
- <article class="content-card project-card" data-filter-value="completed"><div class="panel-heading"><span class="row-icon"><i class="bi bi-bag-check"></i></span><span class="status completed">Completed</span></div><h3>Landing Page</h3><p>Design and launch the campaign landing page.</p><div class="resource-meta"><span>CodeHack Team</span><span>·</span><span>Completed Nov 04</span></div><div class="project-progress" style="margin-top:25px"><div class="progress-track"><span style="width:100%"></span></div><small>100%</small></div></article>
- <article class="content-card project-card" data-filter-value="completed"><div class="panel-heading"><span class="row-icon"><i class="bi bi-bar-chart"></i></span><span class="status completed">Completed</span></div><h3>Quarterly Insights</h3><p>Summarize the previous quarter’s performance data.</p><div class="resource-meta"><span>Ecometrics</span><span>·</span><span>Completed Oct 29</span></div><div class="project-progress" style="margin-top:25px"><div class="progress-track"><span style="width:100%"></span></div><small>100%</small></div></article>
+
+    {% for project in projects %}
+
+    <article
+        class="content-card project-card"
+        data-filter-value="{% if project.status == 'ACTIVE' %}progress{% elif project.status == 'PLANNING' %}planning{% elif project.status == 'COMPLETED' %}completed{% else %}other{% endif %}"
+    >
+
+        <div class="panel-heading">
+
+            <span class="row-icon">
+                <i class="bi bi-folder2-open"></i>
+            </span>
+
+            {% if project.status == 'ACTIVE' %}
+                <span class="status in-progress">In progress</span>
+            {% elif project.status == 'PLANNING' %}
+                <span class="status">Planning</span>
+            {% elif project.status == 'ON_HOLD' %}
+                <span class="status review">On hold</span>
+            {% elif project.status == 'COMPLETED' %}
+                <span class="status completed">Completed</span>
+            {% else %}
+                <span class="status">Archived</span>
+            {% endif %}
+
+        </div>
+
+        <h3>{{ project.name }}</h3>
+
+        <p>
+            {% if project.description %}
+                {{ project.description|truncatechars:110 }}
+            {% else %}
+                No project description added.
+            {% endif %}
+        </p>
+
+        <div class="resource-meta">
+
+            <span>{{ project.workspace.name }}</span>
+            <span>·</span>
+
+            {% if project.target_end_date %}
+                <span>Due {{ project.target_end_date|date:"M d" }}</span>
+            {% else %}
+                <span>No deadline</span>
+            {% endif %}
+
+        </div>
+
+        <div class="resource-meta" style="margin-top:12px;">
+
+            <span>
+                <i class="bi bi-people"></i>
+                {{ project.member_count }} members
+            </span>
+
+            <span>·</span>
+
+            <span>{{ project.total_task_count }} tasks</span>
+
+        </div>
+
+        <div class="project-progress" style="margin-top:18px;">
+
+            <div class="progress-track">
+                <span style="width:{{ project.progress_percentage }}%"></span>
+            </div>
+
+            <small>{{ project.progress_percentage }}%</small>
+
+        </div>
+
+        <!-- PROJECT DETAILS BUTTON -->
+
+        <div style="margin-top:20px;">
+
+            <a
+                href="{% url 'project_detail' project.id %}"
+                class="btn-primary-soft"
+                style="display:inline-flex; align-items:center; gap:8px; text-decoration:none;"
+            >
+                <i class="bi bi-arrow-up-right-square"></i>
+                View Project Details
+            </a>
+
+        </div>
+
+    </article>
+
+    {% empty %}
+
+    <article class="content-card" style="grid-column:1/-1; text-align:center; padding:40px;">
+
+        <i class="bi bi-folder2-open" style="font-size:36px;"></i>
+
+        <h3>No projects found</h3>
+
+        <p>No projects are currently available in your workspaces.</p>
+
+    </article>
+
+    {% endfor %}
+
 </section>
+
+
+<!-- NEW PROJECT MODAL -->
+
+<dialog id="newProjectModal" class="project-modal">
+
+    <div class="project-modal-header">
+
+        <div>
+            <p class="eyebrow">PROJECT MANAGEMENT</p>
+            <h2>Create New Project</h2>
+            <p class="page-subtitle">
+                Create a project inside your workspace.
+            </p>
+        </div>
+
+        <button
+            type="button"
+            id="closeProjectModal"
+            class="modal-close"
+            aria-label="Close"
+        >
+            &times;
+        </button>
+
+    </div>
+
+
+    <form id="newProjectForm">
+
+        {% csrf_token %}
+
+        <div class="project-form-group">
+
+            <label for="workspace_id">Select Workspace *</label>
+
+            <select id="workspace_id" name="workspace_id" required>
+
+                <option value="">Choose workspace</option>
+
+                {% for workspace in available_workspaces %}
+                    <option value="{{ workspace.id }}">
+                        {{ workspace.name }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="project-form-group">
+
+            <label for="project_name">Project Name *</label>
+
+            <input
+                type="text"
+                id="project_name"
+                name="name"
+                maxlength="200"
+                placeholder="Enter project name"
+                required
+            >
+
+        </div>
+
+
+        <div class="project-form-group">
+
+            <label for="project_description">Description</label>
+
+            <textarea
+                id="project_description"
+                name="description"
+                rows="4"
+                placeholder="Describe your project..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="project-form-row">
+
+            <div class="project-form-group">
+
+                <label for="start_date">Start Date</label>
+
+                <input
+                    type="date"
+                    id="start_date"
+                    name="start_date"
+                >
+
+            </div>
+
+
+            <div class="project-form-group">
+
+                <label for="target_end_date">Target End Date</label>
+
+                <input
+                    type="date"
+                    id="target_end_date"
+                    name="target_end_date"
+                >
+
+            </div>
+
+        </div>
+
+
+        <p id="projectFormMessage" role="alert"></p>
+
+
+        <div class="project-modal-actions">
+
+            <button
+                type="button"
+                id="cancelProjectBtn"
+                class="btn-secondary"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="submit"
+                id="saveProjectBtn"
+                class="btn-primary-soft"
+            >
+                <i class="bi bi-plus-lg"></i>
+                Create Project
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
 {% endblock %}
 
 
-{% block scripts %} 
+<!-- MODAL CSS -->
+
+{% block scripts %}
+
+<style>
+
+.project-modal {
+    width: min(600px, 92%);
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid #e6d9ca;
+    border-radius: 18px;
+    padding: 28px;
+    background: #fffaf5;
+    color: #292725;
+}
+
+.project-modal::backdrop {
+    background: rgba(35, 32, 29, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+.project-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.project-modal-header h2 {
+    margin: 5px 0;
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    font-size: 28px;
+    cursor: pointer;
+    color: #5c5148;
+}
+
+.project-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.project-form-group label {
+    font-weight: 600;
+}
+
+.project-form-group input,
+.project-form-group select,
+.project-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dfd0c0;
+    border-radius: 8px;
+    background: #fff;
+    color: #292725;
+    font: inherit;
+}
+
+.project-form-group textarea {
+    resize: vertical;
+}
+
+.project-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.project-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.btn-secondary {
+    padding: 11px 18px;
+    border: 1px solid #d8c6b3;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+}
+
+#projectFormMessage {
+    color: #b33d32;
+    font-size: 14px;
+}
+
+#projectFormMessage.success {
+    color: #27834b;
+}
+
+@media(max-width: 600px) {
+
+    .project-form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .project-modal {
+        padding: 20px;
+    }
+
+}
+
+</style>
+
+
+<!-- NEW PROJECT JAVASCRIPT -->
 
 <script>
 
-(function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-    const dashboard = document.getElementById("dashboard");
+    const modal = document.getElementById("newProjectModal");
 
-    const menuToggle = document.getElementById("menuToggle");
+    const openBtn = document.getElementById("newProjectBtn");
+
+    const closeBtn = document.getElementById("closeProjectModal");
+
+    const cancelBtn = document.getElementById("cancelProjectBtn");
+
+    const form = document.getElementById("newProjectForm");
+
+    const message = document.getElementById("projectFormMessage");
+
+    const saveBtn = document.getElementById("saveProjectBtn");
 
 
-    // Check that both elements exist
-    if (!dashboard || !menuToggle) {
+    // Open modal
 
-        console.error("Sidebar button or dashboard not found.");
+    openBtn.addEventListener("click", function () {
+        modal.showModal();
+    });
 
-        return;
+
+    // Close modal
+
+    function closeModal() {
+
+        modal.close();
+
+        form.reset();
+
+        message.textContent = "";
+
+        message.className = "";
+
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+
+    cancelBtn.addEventListener("click", closeModal);
+
+
+    // Get Django CSRF cookie
+
+    function getCookie(name) {
+
+        const cookies = document.cookie.split(";");
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (cookie.startsWith(name + "=")) {
+
+                return decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
+            }
+
+        }
+
+        return "";
 
     }
 
 
-    // Hamburger button click
-    menuToggle.addEventListener("click", function () {
+    // Create project
 
-        const isCollapsed =
-            dashboard.classList.toggle("sidebar-collapsed");
+    form.addEventListener("submit", async function (event) {
 
+        event.preventDefault();
 
-        // Update accessibility information
-        menuToggle.setAttribute(
-            "aria-expanded",
-            String(!isCollapsed)
-        );
+        message.textContent = "";
+
+        message.className = "";
 
 
-        menuToggle.setAttribute(
-            "aria-label",
-            isCollapsed ? "Show sidebar" : "Hide sidebar"
-        );
+        const startDate = form.start_date.value;
+
+        const endDate = form.target_end_date.value;
+
+
+        // Date validation
+
+        if (startDate && endDate && endDate < startDate) {
+
+            message.textContent =
+                "Target end date cannot be before start date.";
+
+            return;
+
+        }
+
+
+        const payload = {
+
+            workspace_id: Number(form.workspace_id.value),
+
+            name: form.name.value.trim(),
+
+            description: form.description.value.trim(),
+
+            start_date: startDate || null,
+
+            target_end_date: endDate || null
+
+        };
+
+
+        if (!payload.workspace_id || !payload.name) {
+
+            message.textContent =
+                "Please select a workspace and enter project name.";
+
+            return;
+
+        }
+
+
+        saveBtn.disabled = true;
+
+        saveBtn.textContent = "Creating...";
+
+
+        try {
+
+            const response = await fetch("/api/v1/projects/", {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type": "application/json",
+
+                    "X-CSRFToken": getCookie("csrftoken")
+
+                },
+
+                credentials: "same-origin",
+
+                body: JSON.stringify(payload)
+
+            });
+
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+
+                const errorText = Object.values(data)
+                    .flat()
+                    .join(" ");
+
+                throw new Error(
+                    errorText || "Unable to create project."
+                );
+
+            }
+
+
+            message.textContent =
+                "Project created successfully!";
+
+            message.className = "success";
+
+
+            setTimeout(function () {
+
+                window.location.reload();
+
+            }, 800);
+
+
+        } catch (error) {
+
+            message.textContent = error.message;
+
+        } finally {
+
+            saveBtn.disabled = false;
+
+            saveBtn.innerHTML =
+                '<i class="bi bi-plus-lg"></i> Create Project';
+
+        }
 
     });
 
-})();
+});
 
 </script>
 

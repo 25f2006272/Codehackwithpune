@@ -23,4 +23,15 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
 
     path("", include("core.urls")),
+    
+    path("api/v1/", include("workspaces.urls")),
+    
+    path("api/v1/", include("projects.urls")),
+    
+    path("api/v1/", include("filemanager.urls")),
+    
+    path("api/v1/", include("ai_engine.urls")),
+    
+    path("api/v1/", include("handover.urls")),
+    
 ]
